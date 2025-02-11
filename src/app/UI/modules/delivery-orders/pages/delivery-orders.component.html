@@ -1,0 +1,79 @@
+<div id="content">
+  <xng-breadcrumb [separator]="separatorTemplate" class="breadcrumb">
+    <ng-container *xngBreadcrumbItem="let breadcrumb">
+      <div class="breadcrumb__item">
+        {{ breadcrumb | titlecase }}
+      </div>
+    </ng-container>
+  </xng-breadcrumb>
+</div>
+<ng-template #separatorTemplate>
+  <mat-icon>arrow_right</mat-icon>
+</ng-template>
+
+<router-outlet></router-outlet>
+
+<ng-container *ngIf="isDeliveryOrdersMain()">
+  <div class="container-fluid">
+    <div class="row">
+      <div
+        class="col-md-3 col-sm-6"
+        *ngIf="authenticationImplService.isCommercialAllowed()"
+      >
+        <mat-card class="menu-card comercial" (click)="goToCommercial()">
+          <mat-card-header>
+            <mat-icon>storefront</mat-icon>
+            <mat-card-title>Comercial</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Crear / Editar Pedidos</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div
+        class="col-md-3 col-sm-6"
+        *ngIf="authenticationImplService.isProductionAllowed()"
+      >
+        <mat-card class="menu-card produccion" (click)="goToProduction()">
+          <mat-card-header>
+            <mat-icon>factory</mat-icon>
+            <mat-card-title>Produccion</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Ver / Procesar Ordenes</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div class="row">
+      <div
+        class="col-md-3 col-sm-6"
+        *ngIf="authenticationImplService.isDispatchAllowed()"
+      >
+        <mat-card class="menu-card despachos" (click)="goToDispatch()">
+          <mat-card-header>
+            <mat-icon>local_shipping</mat-icon>
+            <mat-card-title>Despachos</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Revisar / Despachar Ordenes</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div
+        class="col-md-3 col-sm-6"
+        *ngIf="authenticationImplService.isBillingAllowed()"
+      >
+        <mat-card class="menu-card facturacion" (click)="goToBilling()">
+          <mat-card-header>
+            <mat-icon>receipt</mat-icon>
+            <mat-card-title>Facturacion</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Imprimir / Facturar Ordenes</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</ng-container>

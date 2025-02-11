@@ -1,0 +1,7 @@
+<ng-container *ngIf="this.order()?.id! > -1">
+  <app-order-header [screenType]="SCREEN_TYPE_CREATE"> </app-order-header>
+  <app-create-edit-order
+    [screenType]="SCREEN_TYPE_CREATE"
+    [title]="createOrderTitle"
+  ></app-create-edit-order>
+</ng-container>

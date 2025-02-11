@@ -1,0 +1,20 @@
+<button matTooltip="Refrescar" mat-icon-button (click)="refresh()">
+  <mat-icon>refresh</mat-icon>
+</button>
+{{ title }}
+<div>
+  <ag-grid-angular
+    class="ag-theme-alpine admin-cities-grid"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="this.rowData"
+    [gridOptions]="gridOptions"
+    (gridReady)="onGridReady($event)"
+    (cellValueChanged)="onCellValueChanged($event)"
+  ></ag-grid-angular>
+</div>
+<!--
+(filterOpened)="onFilterOpened($event)"
+(filterChanged)="onFilterChanged($event)"
+(filterModified)="onFilterModified($event)"
+(firstDataRendered)="onFirstDataRendered($event)" -->

@@ -1,0 +1,26 @@
+.toolbar-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .logo {
+    margin-right: auto;
+    width: 210px;
+    height: 66px;
+  }
+
+  app-orders-menu,
+  app-user-menu {
+    margin-left: 20px;
+  }
+}
+
+.menu-item {
+  border-right: 1px solid #ffffff; /* Cambia este color al que prefieras */
+  padding-right: 10px; /* Ajusta este valor según tus necesidades */
+  margin-right: 10px; /* Ajusta este valor según tus necesidades */
+}
+
+.menu-item:last-child {
+  border-right: none; /* Elimina el borde del último elemento */
+}

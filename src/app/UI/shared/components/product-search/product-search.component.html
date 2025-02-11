@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <div class="row">
+    <div *ngIf="!isLite">
+      <button matTooltip="Refrescar" mat-icon-button (click)="refresh(true)">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+    <button type="button" class="button-add">
+      <mat-icon class="text-icon">add</mat-icon>
+    </button>
+    <div class="col p-0 m-0">
+      <form class="search-form">
+        <mat-form-field class="full-width">
+          <mat-label>Agregar Producto</mat-label>
+          <input
+            matInput
+            type="text"
+            #filterTextBox
+            id="filter-text-box"
+            placeholder="Filtro..."
+            autocomplete="off"
+            (input)="onFilterTextBoxChanged(filterTextBox.value)"
+            (keyup.enter)="addProductByReference(filterTextBox.value)"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div [class.hidden]="isLite">
+  <ag-grid-angular
+    class="ag-theme-alpine create-order-products-grid"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="this.rowData"
+    [gridOptions]="gridOptions"
+    [style.height.px]="gridHeight"
+    (gridReady)="onGridReady($event)"
+  ></ag-grid-angular>
+</div>

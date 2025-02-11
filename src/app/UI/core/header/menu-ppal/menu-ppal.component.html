@@ -1,0 +1,44 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row class="toolbar-row">
+    <!-- Optimizar imágenes usando ngOptimizedImage -->
+    <img
+      class="logo"
+      ngSrc="assets/images/LOGO-ELOGIX.jpg"
+      alt="LOGO-ELOGIX"
+      priority
+      width="150"
+      height="50"
+    />
+    <img
+      class="logo"
+      ngSrc="assets/images/LOGO-TARAPACA.webp"
+      alt="LOGO-TARAPACA"
+      priority
+      width="150"
+      height="50"
+    />
+
+    <!-- Menú principal -->
+    <div class="menu-buttons">
+      <!-- Mover el botón de Inicio dentro del ng-container -->
+      <ng-container *ngIf="isLoggedIn()">
+        <a mat-button [routerLink]="URL_HOME" class="menu-item">Inicio</a>
+
+        <app-orders-menu
+          class="menu-item"
+          (mouseenter)="ordersMenuHover()"
+        ></app-orders-menu>
+
+        <app-user-menu
+          *ngIf="currentUser()"
+          [user]="currentUser()"
+          class="menu-item"
+          (mouseenter)="userMenuHover()"
+        ></app-user-menu>
+      </ng-container>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- Loader component -->
+<app-loader></app-loader>

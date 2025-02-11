@@ -1,0 +1,21 @@
+<!-- menu-user.component.html -->
+<button
+  mat-button
+  [matMenuTriggerFor]="userMenu"
+  #userMenuTrigger="matMenuTrigger"
+>
+  <ngx-avatars [name]="getCurrentUseName()"></ngx-avatars>
+</button>
+
+<mat-menu #userMenu="matMenu" [overlapTrigger]="true" xPosition="before">
+  <div class="user-menu-header">
+    <ngx-avatars [name]="getCurrentUseName()"></ngx-avatars>
+    <span>{{ getCurrentUseName() }}</span>
+  </div>
+  <span *ngIf="userMenuTrigger" (mouseleave)="closeMenu()">
+    <button mat-menu-item (click)="onLogout()">
+      <fa-icon [icon]="faDoorOpen"></fa-icon>
+      <span> Salir </span>
+    </button>
+  </span>
+</mat-menu>

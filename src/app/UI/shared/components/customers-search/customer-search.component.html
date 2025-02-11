@@ -1,0 +1,14 @@
+<button matTooltip="Refrescar" mat-icon-button (click)="refresh(true)">
+  <mat-icon>refresh</mat-icon>
+</button>
+{{ title }}
+<div>
+  <ag-grid-angular
+    class="ag-theme-alpine commercial-customers-grid"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="this.rowData"
+    [gridOptions]="gridOptions"
+    (gridReady)="onGridReady($event)"
+  ></ag-grid-angular>
+</div>

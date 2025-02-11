@@ -1,0 +1,19 @@
+<button
+  matTooltip="Refrescar"
+  mat-icon-button
+  (click)="loadBilledOrdersByCustomer()"
+>
+  <mat-icon>refresh</mat-icon>
+</button>
+{{ title }}
+<div>
+  <ag-grid-angular
+    class="ag-theme-alpine ready-billing-delivery-orders-grid"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="this.rowData"
+    [gridOptions]="gridOptions"
+    (firstDataRendered)="onFirstDataRendered($event)"
+    (gridReady)="onGridReady($event)"
+  ></ag-grid-angular>
+</div>

@@ -1,0 +1,64 @@
+<div>
+  <mat-grid-list
+    cols="5"
+    rowHeight="35px"
+    gutterSize="20px"
+    *ngIf="advancedSearch === true"
+  >
+    <mat-grid-tile>
+      <input type="text" placeholder="Estado" [(ngModel)]="statusToShow" />
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <input type="text" placeholder="Cliente" [(ngModel)]="searchCustomer" />
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <input type="text" placeholder="Orden" [(ngModel)]="searchOrder" />
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <input type="date" placeholder="Fecha" [(ngModel)]="searchDate" />
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <!-- <button mat-raised-button (click)="onSearch()">Buscar</button> -->
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
+
+<mat-grid-list cols="3" rowHeight="40px">
+  <mat-grid-tile>
+    <button matTooltip="Refrescar" mat-icon-button (click)="getOrdersData({})">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <div class="search-container">
+      Mostrar:
+      <input
+        type="number"
+        [(ngModel)]="pageSize"
+        (ngModelChange)="getOrdersData({})"
+        placeholder="Registros por página"
+        min="1"
+        max="1000"
+        class="styled-input"
+      />
+      <button (click)="increasePageSize()" class="styled-button">+100</button>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <div class="title-container">
+      {{ title }}
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<div>
+  <ag-grid-angular
+    class="ag-theme-alpine production-delivery-orders-grid"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="rowData()"
+    [gridOptions]="gridOptions"
+    (gridReady)="onGridReady($event)"
+    (paginationChanged)="onPaginationChange($event)"
+  ></ag-grid-angular>
+</div>

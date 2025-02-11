@@ -1,0 +1,66 @@
+@import 'variables';
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.menu-card {
+  margin: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  mat-card-content {
+    p {
+      margin: 0;
+      color: #666;
+    }
+  }
+}
+
+.comercial {
+  background-color: $comercial-bg-color;
+  color: #000;
+}
+
+.produccion {
+  background-color: $produccion-bg-color;
+  color: #000000;
+}
+
+.despachos {
+  background-color: $despachos-bg-color;
+  color: #000000;
+}
+
+.facturacion {
+  background-color: $facturacion-bg-color;
+  color: #000000;
+}
+
+.administracion {
+  background-color: $administracion-bg-color;
+  color: #000000;
+}

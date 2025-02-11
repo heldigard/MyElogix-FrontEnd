@@ -1,0 +1,38 @@
+<div class="container-fluid" *ngIf="order()">
+  <app-order-customer-info [screenType]="this.screenType">
+  </app-order-customer-info>
+
+  <app-order-general-observations
+    [screenType]="this.screenType"
+  ></app-order-general-observations>
+
+  <app-audit-info
+    [data]="order()"
+    [showUpdatedInfo]="true"
+    [index]="order().id!"
+  >
+  </app-audit-info>
+
+  <mat-divider></mat-divider>
+
+  <app-product-orders-info
+    [screenType]="this.screenType"
+    (lastFieldEnter)="focusLiteSearch()"
+  ></app-product-orders-info>
+
+  <mat-divider></mat-divider>
+
+  <ng-container *ngIf="!this.isOrderFinished()">
+    <app-product-search
+      #liteProductSearch
+      [title]="productsTitle"
+      [isLite]="true"
+      [currentModule]="MODULE_COMMERCIAL"
+    ></app-product-search>
+  </ng-container>
+
+  <app-order-action-buttons
+    [screenType]="this.screenType"
+    [title]="this.title"
+  ></app-order-action-buttons>
+</div>

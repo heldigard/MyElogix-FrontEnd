@@ -1,0 +1,17 @@
+<div class="order-stats" *ngIf="orderResponse">
+  <div class="stat-item">
+    <span>Pendientes: {{ orderResponse.pendingCount }}</span>
+  </div>
+  <div class="stat-item">
+    <span>En Producción: {{ orderResponse.productionCount }}</span>
+  </div>
+  <div class="stat-item">
+    <span>Finalizados: {{ orderResponse.finishedCount }}</span>
+  </div>
+  <div class="stat-item">
+    <span>Despachados: {{ orderResponse.deliveredCount }}</span>
+  </div>
+  <div class="stat-item">
+    <span>Cancelados: {{ orderResponse.cancelledCount }}</span>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+.background {
+  height: 900px;
+  background-image: url('/assets/images/login_background.jpg');
+  background-size: cover;
+}
+
+/* Rounded border */
+hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
+}
+
+///////////////////////////////////////////////
+
+@import 'variables';
+
+.card {
+  box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);
+  -webkit-box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);
+  animation: ease-in-out 0.7s;
+  width: 800px;
+  transition: 0.3s;
+
+  &:hover {
+    box-shadow: -6px 10px 21px 4px rgba(217, 217, 217, 0.75);
+    -webkit-box-shadow: -6px 10px 21px 4px rgba(217, 217, 217, 0.75);
+    -moz-box-shadow: -6px 10px 21px 4px rgba(255, 255, 255, 0.75);
+    transform: scale(1.1);
+  }
+  &__title {
+    margin-left: 4px;
+  }
+}
+
+/////////////////////////////////////////////////
+
+.administracion {
+  background-color: $administracion-bg-color;
+  color: #000000;
+  //border: 1px solid orange;
+}

@@ -1,0 +1,13 @@
+<form [formGroup]="zoneForm" novalidate>
+  <mat-form-field appearance="outline">
+    <mat-label>Rutas</mat-label>
+    <mat-select
+      formControlName="id"
+      (selectionChange)="onDeliveryZoneSelectionChange($event)"
+    >
+      <mat-option *ngFor="let zone of zoneList" [value]="zone.id">
+        {{ zone.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>

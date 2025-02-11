@@ -1,0 +1,48 @@
+<div id="content">
+  <xng-breadcrumb [separator]="separatorTemplate" class="breadcrumb">
+    <ng-container *xngBreadcrumbItem="let breadcrumb">
+      <ng-container>
+        <div class="breadcrumb__item">
+          {{ breadcrumb | titlecase }}
+        </div></ng-container
+      >
+    </ng-container>
+  </xng-breadcrumb>
+</div>
+<ng-template #separatorTemplate><mat-icon>arrow_right</mat-icon></ng-template>
+
+<div class="container-fluid">
+  <nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_CITIES_MAIN]"
+      routerLinkActive
+      #adminCities="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [active]="adminCities.isActive"
+      [ngClass]="adminCities.isActive ? 'active-link' : 'inactive-link'"
+    >
+      <app-pestania-label
+        [title]="citiesTitle"
+        [icon]="citiesIcon"
+      ></app-pestania-label>
+    </a>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_CITIES_EXCEL]"
+      routerLinkActive
+      #adminExcelCities="routerLinkActive"
+      [active]="adminExcelCities.isActive"
+      [ngClass]="adminExcelCities.isActive ? 'active-link' : 'inactive-link'"
+      ><app-pestania-label
+        [title]="editCitiesExcelTitle"
+        [icon]="editCitiesExcelIcon"
+      ></app-pestania-label>
+    </a>
+  </nav>
+</div>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

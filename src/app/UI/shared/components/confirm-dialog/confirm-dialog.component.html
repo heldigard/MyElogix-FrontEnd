@@ -1,0 +1,17 @@
+<mat-card fxLayoutGap>
+  <p mat-dialog-title>{{ data.title }}</p>
+  <div mat-dialog-content>
+    <p>{{ data.message }}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onDismiss()">No</button>
+    <button
+      mat-raised-button
+      cdkFocusInitial
+      color="primary"
+      (click)="onConfirm()"
+    >
+      Si
+    </button>
+  </div>
+</mat-card>

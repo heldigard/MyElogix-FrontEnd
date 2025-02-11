@@ -1,0 +1,199 @@
+<ng-container *ngIf="productOrder">
+  <div class="container-fluid {{ getBackgroundClass(productOrder) }}">
+    <div class="row justify-content-center" [formGroup]="form">
+      <!-- Amount Field -->
+      <div class="col-2 ps-1 pe-1">
+        <mat-form-field
+          appearance="outline"
+          class="no-bottom no-left no-right condensed-form-field"
+        >
+          <mat-label>Cantidad</mat-label>
+          <input
+            matInput
+            [ngStyle]="{ 'text-decoration': strikethrough }"
+            [readonly]="isFieldReadOnly"
+            formControlName="amount"
+            type="number"
+            min="1"
+            appAutoFocus
+            appTag
+            [tagIndex]="index + '1'"
+            [attr.data-tag-index]="index + '1'"
+            [isMeasurable]="measurable"
+            (lastTagReached)="onLastTagReached()"
+            inputmode="numeric"
+            style="-moz-appearance: textfield"
+            (keydown)="preventDecimalInput($event)"
+            (keydown)="disableArrowKeys($event)"
+            (focus)="selectInput($event)"
+            (blur)="formatDecimal($event)"
+            (blur)="onFieldBlur('amount')"
+            required
+            autocomplete="off"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Measure Fields -->
+      <ng-container *ngIf="form.get('measure1')">
+        <div class="col-2 ps-1 pe-1">
+          <mat-form-field
+            appearance="outline"
+            class="no-bottom no-left no-right condensed-form-field"
+          >
+            <mat-label>Medida1</mat-label>
+            <input
+              matInput
+              [ngStyle]="{ 'text-decoration': strikethrough }"
+              [readonly]="isFieldReadOnly"
+              formControlName="measure1"
+              [type]="isFieldReadOnly ? 'text' : 'number'"
+              min="0"
+              max="999"
+              appTag
+              [tagIndex]="index + '2'"
+              [attr.data-tag-index]="index + '2'"
+              inputmode="numeric"
+              style="-moz-appearance: textfield"
+              (keydown)="disableArrowKeys($event)"
+              (focus)="selectInput($event)"
+              (blur)="formatDecimal($event)"
+              (blur)="onFieldBlur('measure1')"
+              autocomplete="off"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="col-2 ps-1 pe-1">
+          <mat-form-field
+            appearance="outline"
+            class="no-bottom no-left no-right condensed-form-field"
+          >
+            <mat-label>Medida2</mat-label>
+            <input
+              matInput
+              [ngStyle]="{ 'text-decoration': strikethrough }"
+              [readonly]="isFieldReadOnly"
+              formControlName="measure2"
+              [type]="isFieldReadOnly ? 'text' : 'number'"
+              min="0"
+              max="999"
+              appTag
+              [tagIndex]="index + '3'"
+              [attr.data-tag-index]="index + '3'"
+              inputmode="numeric"
+              style="-moz-appearance: textfield"
+              (keydown)="disableArrowKeys($event)"
+              (focus)="selectInput($event)"
+              (blur)="formatDecimal($event)"
+              (blur)="onFieldBlur('measure2')"
+              autocomplete="off"
+            />
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <!-- Metric Unit Field -->
+      <div class="col-2 ps-1 pe-1" *ngIf="form.get('metricUnit')?.value">
+        <div formGroupName="metricUnit">
+          <mat-form-field
+            appearance="outline"
+            class="no-bottom no-left no-right condensed-form-field"
+          >
+            <mat-label>Unidad Métrica</mat-label>
+            <ng-container
+              *ngIf="isFieldReadOnly; then viewMetricUnit; else editMetricUnit"
+            ></ng-container>
+
+            <ng-template #viewMetricUnit>
+              <input matInput [readonly]="true" formControlName="name" />
+            </ng-template>
+
+            <ng-template #editMetricUnit>
+              <mat-select
+                formControlName="id"
+                required
+                appTag
+                [tagIndex]="index + '4'"
+                [attr.data-tag-index]="index + '4'"
+              >
+                <mat-option
+                  *ngFor="let unit of metricUnitList"
+                  [value]="unit.id"
+                >
+                  {{ unit.name }}
+                </mat-option>
+              </mat-select>
+            </ng-template>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Measure Detail Field -->
+      <div class="col-2 ps-1 pe-1" *ngIf="form.get('measureDetail')">
+        <div formGroupName="measureDetail">
+          <mat-form-field
+            appearance="outline"
+            class="no-bottom no-left no-right condensed-form-field"
+          >
+            <mat-label>Tipo</mat-label>
+            <ng-container
+              *ngIf="
+                isFieldReadOnly;
+                then viewMeasureDetail;
+                else editMeasureDetail
+              "
+            ></ng-container>
+
+            <ng-template #viewMeasureDetail>
+              <input matInput [readonly]="true" formControlName="name" />
+            </ng-template>
+
+            <ng-template #editMeasureDetail>
+              <mat-select
+                formControlName="id"
+                required
+                appTag
+                [tagIndex]="index + '5'"
+                [attr.data-tag-index]="index + '5'"
+                [isMeasurable]="measurable"
+                (lastTagReached)="onLastTagReached()"
+                (selectionChange)="onMeasureSelect($event)"
+              >
+                <mat-option
+                  *ngFor="let detail of measureDetailList"
+                  [value]="detail.id"
+                >
+                  {{ detail.name }}
+                </mat-option>
+              </mat-select>
+            </ng-template>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row justify-content-center pt-3" [formGroup]="form">
+        <!-- Observation Field -->
+        <div class="col-md">
+          <mat-form-field
+            [appearance]="getObservationAppearance()"
+            [ngClass]="getObservationClass()"
+            class="no-bottom condensed-form-field"
+          >
+            <mat-label>Observación</mat-label>
+            <textarea
+              matInput
+              [ngStyle]="{ 'text-decoration': strikethrough }"
+              [readonly]="!isEditableObservation"
+              formControlName="observation"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

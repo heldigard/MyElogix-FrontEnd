@@ -1,0 +1,12 @@
+<div [ngClass]="this.headerClass">
+  <div class="row justify-content-between" *ngIf="this.orderId >= 0">
+    <div class="col-4 h5 text-start">
+      #Orden: &#160;
+      <span class="orderNumber">{{ this.orderId }}</span>
+    </div>
+    <div class="col-4 h5 text-end">
+      Estado:
+      <span class="status">{{ orderStatus.description?.toUpperCase() }}</span>
+    </div>
+  </div>
+</div>

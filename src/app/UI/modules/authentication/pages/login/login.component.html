@@ -1,0 +1,116 @@
+<div class="background">
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+<mat-card>
+  <mat-card-title>Pedidos Tarapacá</mat-card-title>
+  <mat-card-content>
+    <div class="container">
+      <!-- Header -->
+      <div class="row align-items-center justify-content-center">
+        <h3><strong>Iniciar sesión</strong></h3>
+        <p>Inicia sesión para acceder a su cuenta.</p>
+      </div>
+
+      <!-- Form -->
+      <div class="row align-items-center justify-content-center">
+        <form [formGroup]="loginForm" autocomplete="on" (ngSubmit)="onLogin()">
+          <!-- Username Field -->
+          <div class="row align-items-center justify-content-center">
+            <mat-form-field>
+              <mat-label>Usuario</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="usuario"
+                formControlName="username"
+                appAutoFocus
+                appTag
+                tagIndex="1"
+                required
+                autocomplete="username"
+              />
+              <mat-error
+                *ngIf="loginForm.get('username')?.errors?.['required']"
+              >
+                Usuario es requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Password Field -->
+          <div class="row justify-content-between">
+            <div class="col-10 p-0">
+              <mat-form-field>
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  [type]="passwordType()"
+                  [disabled]="isSavingForm()"
+                  placeholder="contraseña"
+                  formControlName="password"
+                  name="password"
+                  appTag
+                  tagIndex="2"
+                  required
+                  autocomplete="current-password"
+                />
+                <mat-error
+                  *ngIf="loginForm.get('password')?.errors?.['required']"
+                >
+                  Contraseña es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Show/Hide Password Button -->
+            <div class="col-2 p-0">
+              <button
+                *ngIf="loginForm.get('password')?.value && !isSavingForm()"
+                class="button-show-password"
+                (click)="onShowPassword()"
+                type="button"
+                [attr.aria-label]="
+                  showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'
+                "
+              >
+                <fa-icon [icon]="showPassword() ? faEyeSlash : faEye"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div class="row align-items-center justify-content-center">
+            <div *ngIf="error" class="error" role="alert">{{ error }}</div>
+            <div *ngIf="welcome" class="welcome" role="status">
+              {{ welcome }}
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="row align-items-center justify-content-center">
+            <button
+              class="button-login"
+              type="submit"
+              matTooltip="Login"
+              matTooltipPosition="right"
+              [disabled]="!isFormValid() || isSavingForm()"
+              appTag
+              tagIndex="3"
+            >
+              <mat-spinner *ngIf="isSavingForm()" diameter="20"></mat-spinner>
+              <span>Login</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+<img
+  ngSrc="assets/images/login_background.jpg"
+  alt="login_background"
+  height="1664"
+  width="2480"
+  class="img-fluid"
+/>

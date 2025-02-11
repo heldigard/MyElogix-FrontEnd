@@ -1,0 +1,4 @@
+<div class="order-chips" [matTooltip]="getAllIdsText()">
+  <span class="chip" *ngFor="let id of visibleIds">{{id}}</span>
+  <span class="more-chip" *ngIf="remainingCount > 0">+{{remainingCount}}</span>
+</div>

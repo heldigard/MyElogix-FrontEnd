@@ -1,0 +1,31 @@
+<ng-container *ngIf="!state().isLoading && order().id">
+  <app-order-customer-info [screenType]="screenType"></app-order-customer-info>
+
+  <app-order-general-observations
+    [screenType]="screenType"
+  ></app-order-general-observations>
+
+  <app-audit-info
+    [data]="order()"
+    [showUpdatedInfo]="true"
+    [index]="order().id"
+  >
+  </app-audit-info>
+
+  <mat-divider></mat-divider>
+
+  <app-order-stats [orderResponse]="state()!"></app-order-stats>
+
+  <app-product-orders-info [screenType]="screenType"></app-product-orders-info>
+
+  <mat-divider></mat-divider>
+</ng-container>
+
+<div class="container-fluid">
+  <app-order-action-buttons [screenType]="screenType" [title]="title">
+  </app-order-action-buttons>
+</div>
+
+<div *ngIf="state().isLoading" class="loading-spinner">
+  <mat-spinner></mat-spinner>
+</div>

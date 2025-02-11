@@ -1,0 +1,11 @@
+.img-view {
+  position: relative;
+  transition: all 250ms;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+}
+
+.img-view:hover {
+  transform: scale(2);
+}

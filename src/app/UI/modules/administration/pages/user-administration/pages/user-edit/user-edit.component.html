@@ -1,0 +1,18 @@
+<div class="container-fluid">
+  <div class="row">
+    <button matTooltip="Refrescar" mat-icon-button (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+</div>
+<div>
+  <ag-grid-angular
+    class="ag-theme-alpine users-grid"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="this.rowData"
+    [gridOptions]="gridOptions"
+    (gridReady)="onGridReady($event)"
+    (cellValueChanged)="onCellValueChanged($event)"
+  ></ag-grid-angular>
+</div>

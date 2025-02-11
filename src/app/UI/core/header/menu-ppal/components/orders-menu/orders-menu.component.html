@@ -1,0 +1,56 @@
+<!-- menu-orders.component.html -->
+<button
+  mat-button
+  [matMenuTriggerFor]="ordersMenu"
+  #ordersMenuTrigger="matMenuTrigger"
+>
+  <mat-icon>work</mat-icon>
+  Modulos
+</button>
+
+<mat-menu #ordersMenu="matMenu" [overlapTrigger]="true" xPosition="before">
+  <span *ngIf="ordersMenuTrigger" (mouseleave)="ordersMenuTrigger.closeMenu()">
+    <button mat-menu-item *ngIf="authService.isCommercialAllowed()">
+      <a
+        [routerLink]="[URL_ORDERS, URL_COMMERCIAL]"
+        routerLinkActive="active-link"
+      >
+        <mat-icon>storefront</mat-icon>
+        <span>Comercial</span>
+      </a>
+    </button>
+    <button mat-menu-item *ngIf="authService.isProductionAllowed()">
+      <a
+        [routerLink]="[URL_ORDERS, URL_PRODUCTION]"
+        routerLinkActive="active-link"
+      >
+        <mat-icon>factory</mat-icon>
+        <span>Producción</span>
+      </a>
+    </button>
+    <button mat-menu-item *ngIf="authService.isDispatchAllowed()">
+      <a
+        [routerLink]="[URL_ORDERS, URL_DISPATCH]"
+        routerLinkActive="active-link"
+      >
+        <mat-icon>local_shipping</mat-icon>
+        <span>Despachos</span>
+      </a>
+    </button>
+    <button mat-menu-item *ngIf="authService.isBillingAllowed()">
+      <a
+        [routerLink]="[URL_ORDERS, URL_BILLING]"
+        routerLinkActive="active-link"
+      >
+        <mat-icon>receipt</mat-icon>
+        <span>Facturación</span>
+      </a>
+    </button>
+    <button mat-menu-item *ngIf="authService.isManagerAllowed()">
+      <a [routerLink]="[URL_ADMIN]" routerLinkActive="active-link">
+        <mat-icon>settings</mat-icon>
+        <span>Admin</span>
+      </a>
+    </button>
+  </span>
+</mat-menu>

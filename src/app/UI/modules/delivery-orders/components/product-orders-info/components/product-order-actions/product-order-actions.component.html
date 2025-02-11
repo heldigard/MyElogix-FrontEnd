@@ -1,0 +1,48 @@
+<div class="actions-container">
+  <!-- Production Ready Button -->
+  <div class="row justify-content-center" *ngIf="showReadyProduction">
+    <div class="col-4 align-self-center">
+      <button
+        class="btn-ready-prod"
+        type="button"
+        matTooltip="Listo"
+        matTooltipPosition="right"
+        [disabled]="isSaving"
+        (click)="onAdvanceStatus()"
+      >
+        <ng-container *ngIf="isSaving">
+          <mat-icon>
+            <mat-spinner diameter="20"></mat-spinner>
+          </mat-icon>
+        </ng-container>
+        <img
+          width="30"
+          height="30"
+          src="assets/icons/product-order-ready-icon.png"
+          alt="ready"
+        />
+      </button>
+    </div>
+  </div>
+
+  <!-- Dispatch Ready Button -->
+  <div class="row justify-content-center" *ngIf="showReadyDispatch">
+    <div class="col-4 align-self-center">
+      <button
+        class="btn-ready-disp"
+        type="button"
+        matTooltip="Despachado"
+        matTooltipPosition="right"
+        [disabled]="isSaving"
+        (click)="onAdvanceStatus()"
+      >
+        <ng-container *ngIf="isSaving">
+          <mat-icon>
+            <mat-spinner diameter="20"></mat-spinner>
+          </mat-icon>
+        </ng-container>
+        <fa-icon [icon]="faTruck"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>

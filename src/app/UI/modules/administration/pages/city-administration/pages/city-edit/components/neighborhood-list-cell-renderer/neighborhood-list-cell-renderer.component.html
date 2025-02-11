@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline">
+  <mat-label>Barrios</mat-label>
+  <mat-select readonly="true">
+    <mat-option
+      *ngFor="let neighborhood of neighborhoodList"
+      [value]="neighborhood.id"
+    >
+      {{ neighborhood.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

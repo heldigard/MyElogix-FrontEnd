@@ -1,0 +1,77 @@
+<div class="container floating-buttons">
+  <div class="row justify-content-end">
+    <div class="col-2" *ngIf="this.showCancel">
+      <button
+        class="btn btn-cancel"
+        type="button"
+        matTooltip="Anular Orden"
+        matTooltipPosition="right"
+        [disabled]="this.isSaving"
+        (click)="onCancelOrder()"
+      >
+        <ng-container *ngIf="this.isSaving">
+          <mat-icon>
+            <mat-spinner diameter="20"></mat-spinner>
+          </mat-icon>
+        </ng-container>
+        <mat-icon>not_interested</mat-icon>
+      </button>
+    </div>
+    <div class="col-2">
+      <button
+        class="btn btn-back"
+        type="button"
+        matTooltip="Atras"
+        matTooltipPosition="right"
+        [disabled]="this.isSaving"
+        (click)="onBack()"
+      >
+        <ng-container *ngIf="this.isSaving">
+          <mat-icon>
+            <mat-spinner diameter="20"></mat-spinner>
+          </mat-icon>
+        </ng-container>
+        <mat-icon>replay</mat-icon>
+      </button>
+    </div>
+    <div class="col-2" *ngIf="showSave">
+      <button
+        [ngClass]="
+          this.screenType == SCREEN_TYPE_CREATE
+            ? 'btn btn-save'
+            : 'btn btn-edit'
+        "
+        type="button"
+        [matTooltip]="this.title"
+        matTooltipPosition="right"
+        [disabled]="isSaveButtonDisabled()"
+        (click)="onSaveForm()"
+      >
+        <ng-container *ngIf="this.isSaving">
+          <mat-icon>
+            <mat-spinner diameter="20"></mat-spinner>
+          </mat-icon>
+        </ng-container>
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    <div class="col-2" *ngIf="this.showNext">
+      <button
+        class="btn btn-save"
+        type="button"
+        matTooltip="Avanzar Orden"
+        matTooltipPosition="right"
+        [disabled]="this.isSaving"
+        (click)="onUpdateStatus()"
+      >
+        <ng-container *ngIf="this.isSaving">
+          <mat-icon>
+            <mat-spinner diameter="20"></mat-spinner>
+          </mat-icon>
+        </ng-container>
+        <mat-icon>fast_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<br />

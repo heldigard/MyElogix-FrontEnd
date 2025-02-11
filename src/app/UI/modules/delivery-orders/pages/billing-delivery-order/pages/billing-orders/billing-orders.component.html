@@ -1,0 +1,47 @@
+<!-- Ordenes hoy no billed -->
+<app-billing-search
+  [title]="ordersBillingDayTitle"
+  [currentModule]="ordersBillingDayModule"
+  [isBilled]="false"
+></app-billing-search>
+<!-- Ordenes hoy billed -->
+<app-billing-search
+  [title]="ordersBillingDayTitle"
+  [currentModule]="ordersBillingDayModule"
+  [isBilled]="true"
+></app-billing-search>
+
+<!--      Ultimos Dias Billed-->
+<mat-tab-group #tabsReady>
+  <mat-tab #tabOrdersNoReadyLast>
+    <ng-template mat-tab-label>
+      <app-pestania-label
+        [title]="ordersBillingNoReadyLastTitle"
+        [icon]="ordersLastReadyBillingIcon"
+      ></app-pestania-label>
+    </ng-template>
+    <ng-template matTabContent>
+      <app-billing-search
+        [title]="ordersBillingLastTitle"
+        [currentModule]="ordersBillingLastModule"
+        [isBilled]="false"
+      ></app-billing-search>
+    </ng-template>
+  </mat-tab>
+  <mat-tab #tabOrdersReadyLast>
+    <ng-template mat-tab-label>
+      <app-pestania-label
+        [title]="ordersBillingReadyLastTitle"
+        [icon]="ordersLastReadyYesBillingIcon"
+      ></app-pestania-label>
+    </ng-template>
+    <ng-template matTabContent>
+      <app-billing-search
+        [title]="ordersBillingLastTitle"
+        [currentModule]="ordersBillingLastModule"
+        [isBilled]="true"
+      ></app-billing-search>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+<!--     Fin Ultimos Dias Billed-->

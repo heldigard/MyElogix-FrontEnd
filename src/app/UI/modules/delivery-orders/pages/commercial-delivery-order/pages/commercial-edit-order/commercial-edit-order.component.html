@@ -1,0 +1,17 @@
+<ng-container *ngIf="order()">
+  <div class="container-fluid mt-2 boton-print-flotante">
+    <app-print-bill-order
+      [order]="order()"
+    ></app-print-bill-order>
+  </div>
+  <app-order-header [screenType]="SCREEN_TYPE_EDIT"> </app-order-header>
+  <!-- Make sure both inputs are provided -->
+  <app-create-edit-order
+    [screenType]="SCREEN_TYPE_EDIT"
+    [title]="editOrderTitle"
+  ></app-create-edit-order>
+</ng-container>
+
+<div *ngIf="state()?.isLoading" class="loading-container">
+  <mat-spinner></mat-spinner>
+</div>

@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <div class="row">
+    <button mat-raised-button color="primary" (click)="onPrintSelectedDaily()">
+      Imprimir Seleccionados
+    </button>
+  </div>
+  <div class="row">
+    <app-summary-billing-search
+      [title]="ordersBillingDayTitle"
+      [currentModule]="ordersBillingDayModule"
+    ></app-summary-billing-search>
+  </div>
+  <div class="row">
+    <app-summary-billing-search
+      [title]="ordersBillingLastTitle"
+      [currentModule]="ordersBillingLastModule"
+    ></app-summary-billing-search>
+  </div>
+</div>

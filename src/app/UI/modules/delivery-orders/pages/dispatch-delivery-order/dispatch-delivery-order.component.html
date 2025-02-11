@@ -1,0 +1,45 @@
+<div class="container-fluid">
+  <nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+    <button
+      type="button"
+      class="btn btn-link shadow-none"
+      (click)="onClickMain()"
+    >
+      <a
+        mat-tab-link
+        [routerLink]="[URL_DISPATCH_MAIN]"
+        routerLinkActive
+        #dispatchOrders="routerLinkActive"
+        [active]="dispatchOrders.isActive"
+        [ngClass]="dispatchOrders.isActive ? 'active-link' : 'inactive-link'"
+      >
+        <app-pestania-label
+          [title]="deliveryOrdersTitle"
+          [icon]="deliveryOrdersIcon"
+        ></app-pestania-label>
+      </a>
+    </button>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_DISPATCH_VIEW]"
+      routerLinkActive
+      #dispViewOrder="routerLinkActive"
+      [active]="dispViewOrder.isActive"
+      [disabled]="!dispViewOrder.isActive"
+      [ngClass]="dispViewOrder.isActive ? 'active-link' : 'inactive-link'"
+      ><app-pestania-label
+        [title]="viewOrderTitle"
+        [icon]="viewOrderIcon"
+      ></app-pestania-label>
+    </a>
+  </nav>
+</div>
+<ng-container *ngIf="!dispatchOrders.isActive">
+  <br />
+  <br />
+</ng-container>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

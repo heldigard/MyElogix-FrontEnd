@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $DEPLOYMENT_NAME
+  namespace: $NAMESPACE
+spec:
+  replicas: $REPLICAS
+  selector:
+    matchLabels:
+      app: frontend-$NODOLABEL
+  template:
+    metadata:
+      labels:
+        app: frontend-$NODOLABEL
+    spec:
+#      affinity:
+#        nodeAffinity:
+#          preferredDuringSchedulingIgnoredDuringExecution:
+#            - weight: 10
+#              preference:
+#                matchExpressions:
+#                  - key: desarrollo
+#                    operator: In
+#                    values:
+#                      - '$NODOLABEL'
+      containers:
+        - name: frontend-$NODOLABEL
+          image: $DOCKER_IMAGE_NAME
+          imagePullPolicy: Always
+          env:
+            - name: API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: env-frontend
+                  key: API_URL
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: env-backend
+                  key: TZ
+            - name: JWT_HEADER
+              valueFrom:
+                configMapKeyRef:
+                  name: env-backend
+                  key: JWT_HEADER
+            - name: JWT_PREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: env-backend
+                  key: JWT_PREFIX
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: JWT_SECRET
+          resources:
+            requests:
+              cpu: 150m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          ports:
+            - containerPort: 80
+          livenessProbe: # Liveness probe configuration
+            httpGet:
+              path: /healthz  # Adjust path if your health check endpoint differs
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 15  # Optional: Delay before the first probe (default 0)
+            periodSeconds: 30  # Interval between probes (default 1)
+            timeoutSeconds: 3  # Time to wait for a healthy response (default 1)
+            successThreshold: 1  # Number of successes before restarting (default 1)
+            failureThreshold: 3  # Number of failures before restarting (default 3)
+          startupProbe: # Startup probe configuration
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe: # Readiness probe configuration
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+      dnsPolicy: ClusterFirst
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  namespace: $NAMESPACE
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend-$NODOLABEL
+  ports:
+    - port: 80

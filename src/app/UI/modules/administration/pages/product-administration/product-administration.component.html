@@ -1,0 +1,61 @@
+<div id="content">
+  <xng-breadcrumb [separator]="separatorTemplate" class="breadcrumb">
+    <ng-container *xngBreadcrumbItem="let breadcrumb">
+      <ng-container>
+        <div class="breadcrumb__item">
+          {{ breadcrumb | titlecase }}
+        </div></ng-container
+      >
+    </ng-container>
+  </xng-breadcrumb>
+</div>
+<ng-template #separatorTemplate><mat-icon>arrow_right</mat-icon></ng-template>
+
+<div class="container-fluid">
+  <nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_PRODUCTS_MAIN]"
+      routerLinkActive
+      #adminProducts="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [active]="adminProducts.isActive"
+      [ngClass]="adminProducts.isActive ? 'active-link' : 'inactive-link'"
+    >
+      <app-pestania-label
+        [title]="productsTitle"
+        [icon]="productsIcon"
+      ></app-pestania-label>
+    </a>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_PRODUCTS_EDIT]"
+      routerLinkActive
+      #adminEditProduct="routerLinkActive"
+      [active]="adminEditProduct.isActive"
+      [disabled]="!adminEditProduct.isActive"
+      [ngClass]="adminEditProduct.isActive ? 'active-link' : 'inactive-link'"
+      ><app-pestania-label
+        [title]="editProductTitle"
+        [icon]="editProductIcon"
+      ></app-pestania-label>
+    </a>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_PRODUCTS_EXCEL]"
+      routerLinkActive
+      #adminExcelProducts="routerLinkActive"
+      [active]="adminExcelProducts.isActive"
+      [ngClass]="adminExcelProducts.isActive ? 'active-link' : 'inactive-link'"
+      ><app-pestania-label
+        [title]="editProductsExcelTitle"
+        [icon]="editProductsExcelIcon"
+      ></app-pestania-label>
+    </a>
+  </nav>
+</div>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

@@ -1,0 +1,15 @@
+.img-icon {
+  width: 45px;
+  height: 45px;
+  background-color: transparent;
+}
+
+.label-border {
+  -webkit-box-shadow: 0px -5px 10px 0px rgba(17, 212, 124, 0.7);
+  -moz-box-shadow: 0px -5px 10px 0px rgba(17, 212, 124, 0.7);
+  box-shadow: 0px -5px 10px 0px rgba(17, 212, 124, 0.7);
+  border-radius: 25px 25px 0px 0px;
+  -moz-border-radius: 25px 25px 0px 0px;
+  -webkit-border-radius: 25px 25px 0px 0px;
+  border: hidden;
+}

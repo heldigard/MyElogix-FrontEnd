@@ -1,0 +1,15 @@
+<app-delivery-orders-search
+  [statusToShow]="EStatus.FINISHED"
+  [title]="finishedTitle"
+  [screenType]="screenType"
+  (onActiveDeliveryOrderView)="onActiveDeliveryOrderView($event)"
+></app-delivery-orders-search>
+<mat-divider></mat-divider>
+<app-delivery-orders-search
+  [statusToShow]="EStatus.DELIVERED"
+  [title]="deliveredTitle"
+  [screenType]="screenType"
+  (onActiveDeliveryOrderView)="onActiveDeliveryOrderView($event)"
+></app-delivery-orders-search>
+<mat-divider></mat-divider>
+<app-delivery-orders-search [title]="allTitle"></app-delivery-orders-search>

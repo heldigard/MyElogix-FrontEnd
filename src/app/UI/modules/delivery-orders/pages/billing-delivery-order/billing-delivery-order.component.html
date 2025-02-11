@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+    <button
+      type="button"
+      class="btn btn-link shadow-none"
+      (click)="onClickMain()"
+    >
+      <a
+        mat-tab-link
+        [routerLink]="[URL_BILLING_MAIN]"
+        routerLinkActive
+        #billingOrders="routerLinkActive"
+        [active]="billingOrders.isActive"
+        [ngClass]="billingOrders.isActive ? 'active-link' : 'inactive-link'"
+      >
+        <app-pestania-label
+          [title]="ordersBillingReadyTitle"
+          [icon]="ordersReadyBillingIcon"
+        ></app-pestania-label>
+      </a>
+    </button>
+    <button
+      type="button"
+      class="btn btn-link shadow-none"
+      (click)="onClickSummary()"
+    >
+      <a
+        mat-tab-link
+        [routerLink]="[URL_BILLING_SUMMARY]"
+        routerLinkActive
+        #billingSummary="routerLinkActive"
+        [active]="billingSummary.isActive"
+        [ngClass]="billingSummary.isActive ? 'active-link' : 'inactive-link'"
+        ><app-pestania-label
+          [title]="ordersBillingSummaryTitle"
+          [icon]="ordersBillingIcon"
+        ></app-pestania-label>
+      </a>
+    </button>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_BILLING_VIEW]"
+      routerLinkActive
+      #orderPrint="routerLinkActive"
+      [active]="orderPrint.isActive"
+      [ngClass]="orderPrint.isActive ? 'active-link' : 'inactive-link'"
+      [disabled]="!orderPrint.isActive"
+      ><app-pestania-label
+        [title]="ordersViewTitle"
+        [icon]="ordersViewIcon"
+      ></app-pestania-label
+    ></a>
+  </nav>
+</div>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

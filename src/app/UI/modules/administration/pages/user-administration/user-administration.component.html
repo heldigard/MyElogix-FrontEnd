@@ -1,0 +1,51 @@
+<div id="content">
+  <xng-breadcrumb [separator]="separatorTemplate" class="breadcrumb">
+    <ng-container *xngBreadcrumbItem="let breadcrumb">
+      <ng-container>
+        <div class="breadcrumb__item">
+          {{ breadcrumb | titlecase }}
+        </div>
+      </ng-container>
+    </ng-container>
+  </xng-breadcrumb>
+</div>
+<ng-template #separatorTemplate>
+  <mat-icon>arrow_right</mat-icon>
+</ng-template>
+
+<div class="container-fluid">
+  <nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_USERS_MAIN]"
+      routerLinkActive
+      #adminUsers="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [active]="adminUsers.isActive"
+      [ngClass]="adminUsers.isActive ? 'active-link' : 'inactive-link'"
+    >
+      <app-pestania-label
+        [title]="usersTitle"
+        [icon]="usersIcon"
+      ></app-pestania-label>
+    </a>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_USERS_EXCEL]"
+      routerLinkActive
+      #adminExcelUsers="routerLinkActive"
+      [active]="adminExcelUsers.isActive"
+      [ngClass]="adminExcelUsers.isActive ? 'active-link' : 'inactive-link'"
+    >
+      <app-pestania-label
+        [title]="editUsersExcelTitle"
+        [icon]="editUsersExcelIcon"
+      ></app-pestania-label>
+    </a>
+  </nav>
+</div>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

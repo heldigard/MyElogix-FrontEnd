@@ -1,0 +1,443 @@
+<!-- 1. Main wrapper with loading state -->
+<ng-container *ngIf="customerService.currentItem()! as customer">
+  <!-- Loading spinner -->
+  <div
+    *ngIf="customerService.isLoading()"
+    class="d-flex justify-content-center"
+  >
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <!-- Main form -->
+  <form
+    [formGroup]="customerForm"
+    novalidate
+    (ngSubmit)="onSaveForm()"
+    *ngIf="!customerService.isLoading()"
+  >
+    <div class="container-fluid mt-3" *ngIf="customerService.currentItem()!">
+      <!--  ///// Info Basica ///////-->
+      <mat-accordion class="headers-align" multi="true">
+        <mat-expansion-panel
+          [expanded]="step === 0"
+          (opened)="setStep(0)"
+          hideToggle
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ customerService.currentItem()?.name }} </mat-panel-title
+            ><mat-panel-description
+              >Info Basica
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="row">
+            <div class="col-4">
+              <ng-container formGroupName="customer">
+                <mat-form-field appearance="outline" class="no-bottom">
+                  <mat-label>ID</mat-label>
+                  <input matInput [readonly]="true" formControlName="id" />
+                </mat-form-field>
+              </ng-container>
+            </div>
+            <div class="col-4">
+              <ng-container formGroupName="customer">
+                <mat-form-field appearance="outline" class="no-bottom">
+                  <mat-label>Documento</mat-label>
+                  <input
+                    matInput
+                    [readonly]="true"
+                    formControlName="documentNumber"
+                  />
+                </mat-form-field>
+              </ng-container>
+            </div>
+            <ng-container formGroupName="documentType">
+              <div class="col-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo Documento</mat-label>
+                  <mat-select
+                    formControlName="id"
+                    (selectionChange)="onDocumentTypeSelectionChange($event)"
+                  >
+                    <mat-option
+                      *ngFor="let documentType of documentTypeList"
+                      [value]="documentType.id"
+                    >
+                      {{ documentType.name?.toUpperCase() }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-container>
+
+            <div class="row">
+              <ng-container formGroupName="customer">
+                <div class="col">
+                  <mat-form-field
+                    [ngClass]="{
+                      'is-invalid':
+                        customerForm.get('customer.name')?.invalid &&
+                        customerForm.get('customer.name')?.touched,
+                    }"
+                  >
+                    <mat-label>Nombre</mat-label>
+                    <input matInput autocomplete="off" formControlName="name" />
+                  </mat-form-field>
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="!this.customerForm.get('customer.name')?.valid"
+                  >
+                    Nombre Invalido
+                  </span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="row">
+            <ng-container formGroupName="customer">
+              <div class="col-4">
+                <mat-form-field
+                  appearance="outline"
+                  [ngClass]="
+                    !this.customerForm.get('customer.phone')?.valid
+                      ? 'is-invalid'
+                      : 'no-bottom'
+                  "
+                >
+                  <mat-label>Telefono</mat-label>
+                  <input
+                    appNumbersOnly
+                    matInput
+                    autocomplete="off"
+                    formControlName="phone"
+                  />
+                </mat-form-field>
+                <span
+                  class="invalid-feedback"
+                  *ngIf="!this.customerForm.get('customer.phone')?.valid"
+                >
+                  Numero Invalido
+                </span>
+              </div>
+              <div class="col-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Email</mat-label>
+                  <input matInput autocomplete="off" formControlName="email" />
+                </mat-form-field>
+              </div>
+            </ng-container>
+            <ng-container formGroupName="membership">
+              <div class="col-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Membresia</mat-label>
+                  <mat-select
+                    formControlName="id"
+                    (selectionChange)="onMembershipSelectionChange($event)"
+                  >
+                    <mat-option
+                      *ngFor="let membership of this.membershipList"
+                      [value]="membership.id"
+                    >
+                      {{ membership.description?.toUpperCase() }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-container>
+          </div>
+          <mat-action-row>
+            <button type="button" class="btn btn-primary" (click)="nextStep()">
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+        <!--  ///// Fin Info Basica ///////-->
+        <!--  ///// Lista de Oficinas ///////-->
+        <div formArrayName="branchOfficeList">
+          <ng-container
+            *ngFor="let branchOffice of branchOffices().controls; let i = index"
+          >
+            <ng-container formGroupName="{{ i }}">
+              <!--  ///// Info Oficina ///////-->
+              <mat-expansion-panel
+                [expanded]="step === i + 1"
+                (opened)="setStep(i + 1)"
+                hideToggle
+              >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{ branchOffice.get('address')?.value }} </mat-panel-title
+                  ><mat-panel-description
+                    >Info Oficina: {{ i + 1 }}
+                    <mat-icon> location_on</mat-icon>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="row">
+                  <div class="col-4">
+                    <mat-form-field appearance="outline" class="no-bottom">
+                      <mat-label>ID</mat-label>
+                      <input matInput [readonly]="true" formControlName="id" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-8">
+                    <mat-form-field appearance="outline" class="no-bottom">
+                      <mat-label>Direccion</mat-label>
+                      <input
+                        matInput
+                        autocomplete="off"
+                        formControlName="address"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-4">
+                    <ng-container formGroupName="city">
+                      <mat-form-field
+                        appearance="outline"
+                        [ngClass]="
+                          isCityInvalid(i) ? 'is-invalid' : 'no-bottom'
+                        "
+                      >
+                        <mat-label>Ciudad</mat-label>
+                        <mat-select
+                          formControlName="id"
+                          (selectionChange)="onCitySelectionChange($event, i)"
+                        >
+                          <mat-form-field>
+                            <input
+                              matInput
+                              autocomplete="off"
+                              placeholder="Buscar..."
+                              (keyup)="onKeyCity($event.target)"
+                            />
+                          </mat-form-field>
+                          <mat-option
+                            *ngFor="let city of filteredCityList"
+                            [value]="city.id"
+                          >
+                            {{ city.name?.toUpperCase() }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <span class="invalid-feedback" *ngIf="isCityInvalid(i)">
+                        Seleccione Ciudad
+                      </span>
+                    </ng-container>
+                  </div>
+                  <div class="col-4">
+                    <ng-container formGroupName="neighborhood">
+                      <mat-form-field appearance="outline" class="no-bottom">
+                        <mat-label>Barrio</mat-label>
+                        <mat-select
+                          formControlName="id"
+                          (selectionChange)="
+                            onNeighborhoodSelectionChange($event, i)
+                          "
+                        >
+                          <mat-form-field>
+                            <input
+                              matInput
+                              autocomplete="off"
+                              placeholder="Buscar..."
+                              (keyup)="onKeyNeighborhood($event.target)"
+                            />
+                          </mat-form-field>
+                          <mat-option
+                            *ngFor="
+                              let neighborhood of this.filteredNeighborhoodList
+                            "
+                            [value]="neighborhood.id"
+                          >
+                            {{ neighborhood.name?.toUpperCase() }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
+                  </div>
+                  <div class="col-3">
+                    <ng-container formGroupName="deliveryZone">
+                      <mat-form-field
+                        appearance="outline"
+                        [ngClass]="
+                          isDeliveryZoneInvalid(i) ? 'is-invalid' : 'no-bottom'
+                        "
+                      >
+                        <mat-label>Ruta</mat-label>
+                        <mat-select
+                          formControlName="id"
+                          (selectionChange)="
+                            onDeliveryZoneSelectionChange($event)
+                          "
+                        >
+                          <mat-option
+                            *ngFor="
+                              let deliveryZone of this.filteredDeliveryZoneList
+                            "
+                            [value]="deliveryZone.id"
+                          >
+                            {{ deliveryZone.name?.toUpperCase() }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <span
+                        class="invalid-feedback"
+                        *ngIf="isDeliveryZoneInvalid(i)"
+                      >
+                        Seleccione RUTA
+                      </span>
+                    </ng-container>
+                  </div>
+                  <div class="col-1">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="onClickReloadAllDeliveryZone()"
+                    >
+                      <mat-icon>autorenew</mat-icon> Rutas
+                    </button>
+                  </div>
+                </div>
+                <mat-action-row>
+                  <button
+                    type="button"
+                    class="btn btn-info"
+                    (click)="prevStep()"
+                  >
+                    <mat-icon>navigate_before</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="nextStep()"
+                  >
+                    <mat-icon>navigate_next</mat-icon>
+                  </button>
+                </mat-action-row>
+                <!--  ///// Fin Info Oficina ///////-->
+                <!--  ///// Contact Persona ///////-->
+                <div
+                  class="container-fluid"
+                  *ngIf="customerService.currentItem()"
+                >
+                  <ng-container formGroupName="contactPerson">
+                    <mat-expansion-panel [expanded]="step === i + 1">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Contacto </mat-panel-title
+                        ><mat-panel-description
+                          >Mostrar Contacto Officina: {{ i + 1 }}
+                          <mat-icon>account_circle</mat-icon>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+                      <div class="row">
+                        <div class="col-4">
+                          <mat-form-field
+                            appearance="outline"
+                            [ngClass]="
+                              isContactNameInvalid(i)
+                                ? 'is-invalid'
+                                : 'no-bottom'
+                            "
+                          >
+                            <mat-label>Nombre</mat-label>
+                            <input
+                              matInput
+                              autocomplete="off"
+                              formControlName="name"
+                            />
+                          </mat-form-field>
+                          <span
+                            class="invalid-feedback"
+                            *ngIf="isContactNameInvalid(i)"
+                          >
+                            Nombre Invalido
+                          </span>
+                        </div>
+                        <div class="col-4">
+                          <mat-form-field
+                            appearance="outline"
+                            [ngClass]="
+                              this.isContactNumberPrimaryInvalid(i)
+                                ? 'is-invalid'
+                                : 'no-bottom'
+                            "
+                          >
+                            <mat-label>Celular Primario</mat-label>
+                            <input
+                              matInput
+                              appNumbersOnly
+                              autocomplete="off"
+                              formControlName="mobileNumberPrimary"
+                            />
+                          </mat-form-field>
+                          <span
+                            class="invalid-feedback"
+                            *ngIf="this.isContactNumberPrimaryInvalid(i)"
+                          >
+                            Numero Invalido
+                          </span>
+                        </div>
+                        <div class="col-4">
+                          <mat-form-field
+                            appearance="outline"
+                            [ngClass]="
+                              this.isContactNumberSecondaryInvalid(i)
+                                ? 'is-invalid'
+                                : 'no-bottom'
+                            "
+                          >
+                            <mat-label>Celular Secundario</mat-label>
+                            <input
+                              matInput
+                              appNumbersOnly
+                              autocomplete="off"
+                              formControlName="mobileNumberSecondary"
+                            />
+                          </mat-form-field>
+                          <span
+                            class="invalid-feedback"
+                            *ngIf="this.isContactNumberSecondaryInvalid(i)"
+                          >
+                            Numero Invalido
+                          </span>
+                        </div>
+                      </div>
+                    </mat-expansion-panel>
+                  </ng-container>
+                </div>
+                <!--  ///// EndContact Persona ///////-->
+              </mat-expansion-panel>
+            </ng-container>
+          </ng-container>
+        </div>
+        <!--  ///// Fin Lista de Oficinas ///////-->
+      </mat-accordion>
+    </div>
+  </form>
+
+  <br />
+  <mat-divider></mat-divider>
+  <!--  Botones-->
+  <div class="row justify-content-end mt-3">
+    <div class="col-auto">
+      <button
+        class="btn btn-save"
+        type="button"
+        matTooltip="Guardar Cliente"
+        matTooltipPosition="right"
+        [disabled]="isSaving || customerForm.invalid"
+        (click)="onSaveForm()"
+      >
+        <ng-container *ngIf="isSaving">
+          <mat-spinner diameter="20"></mat-spinner>
+        </ng-container>
+        <mat-icon *ngIf="!isSaving">save</mat-icon>
+      </button>
+    </div>
+    <div class="col-auto" *ngIf="customerForm.invalid && customerForm.touched">
+      <span class="text-danger">Primero Corrija los Errores</span>
+    </div>
+  </div>
+</ng-container>

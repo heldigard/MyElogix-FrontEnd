@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <button
+    type="button"
+    matTooltip="Imprimir Ordenes Cliente"
+    matTooltipPosition="right"
+    class="button-bill"
+    (click)="buttonClicked()"
+  >
+    <ng-container *ngIf="this.imgForValue">
+      <img
+        [ngClass]="iconClass"
+        width="20"
+        height="20"
+        [ngSrc]="this.imgForValue"
+        alt="value"
+      />
+    </ng-container>
+  </button>
+</div>

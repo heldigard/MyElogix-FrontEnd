@@ -1,0 +1,78 @@
+<div class="container-fluid">
+  <div class="row">
+    <div
+      class="col-md-3 col-sm-6"
+      *ngIf="authenticationImplService.isManagerAllowed()"
+    >
+      <mat-card class="menu-card comercial" (click)="goToAdminClients()">
+        <mat-card-header>
+          <mat-icon>contact_mail</mat-icon>
+          <mat-card-title>Clientes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Crear / Editar Clientes</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div
+      class="col-md-3 col-sm-6"
+      *ngIf="authenticationImplService.isManagerAllowed()"
+    >
+      <mat-card class="menu-card produccion" (click)="goToAdminProducts()">
+        <mat-card-header>
+          <mat-icon>inventory</mat-icon>
+          <mat-card-title>Productos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Crear / Editar Productos</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div
+      class="col-md-3 col-sm-6"
+      *ngIf="authenticationImplService.isManagerAllowed()"
+    >
+      <mat-card class="menu-card despachos" (click)="goToAdminNeighborhoods()">
+        <mat-card-header>
+          <mat-icon>location_on</mat-icon>
+          <mat-card-title>Barrios</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Crear / Editar Barrios</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div
+      class="col-md-3 col-sm-6"
+      *ngIf="authenticationImplService.isManagerAllowed()"
+    >
+      <mat-card class="menu-card facturacion" (click)="goToAdminCities()">
+        <mat-card-header>
+          <mat-icon>flight_takeoff</mat-icon>
+          <mat-card-title>Ciudades</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Crear / Editar Ciudades</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div
+      class="col-md-3 col-sm-6"
+      *ngIf="authenticationImplService.isAdminAllowed()"
+    >
+      <mat-card class="menu-card administracion" (click)="goToAdminUsers()">
+        <mat-card-header>
+          <mat-icon>manage_accounts</mat-icon>
+          <mat-card-title>Usuarios</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Crear / Editar Usuarios</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

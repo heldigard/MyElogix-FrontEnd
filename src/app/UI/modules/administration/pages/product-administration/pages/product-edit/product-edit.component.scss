@@ -1,0 +1,100 @@
+mat-form-field {
+  width: 100%;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headers-align .mat-mdc-form-field + .mat-mdc-form-field {
+  margin-left: 8px;
+}
+
+.no-bottom {
+  margin-bottom: -0.75em !important;
+  padding-bottom: -0.75em !important;
+}
+
+.no-left {
+  margin-left: -1.25em !important;
+  padding-left: -1.25em !important;
+}
+
+.no-right {
+  margin-right: -1.25em !important;
+  padding-right: -1.25em !important;
+}
+
+.img-membership-flotante {
+  position: fixed;
+  top: 80px; /* Ajusta este valor según la posición deseada */
+  left: 20px; /* Ajusta este valor según la posición deseada */
+  z-index: 1000; /* Asegura que el botón esté por encima de otros elementos */
+}
+
+.btn {
+  border-radius: 20px;
+  box-shadow:
+    rgba(217, 210, 198, 0.2) 0 -25px 18px -14px inset,
+    rgba(227, 221, 213, 0.15) 0 1px 2px,
+    rgba(218, 217, 213, 0.15) 0 2px 4px,
+    rgba(208, 204, 199, 0.15) 0 4px 8px,
+    rgba(192, 191, 185, 0.15) 0 8px 16px,
+    rgba(180, 179, 174, 0.15) 0 16px 32px;
+  cursor: pointer;
+  display: inline-block;
+  font-family:
+    CerebriSans-Regular,
+    -apple-system,
+    system-ui,
+    Roboto,
+    sans-serif;
+  //padding: 7px 20px;
+  //text-align: center;
+  //text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 10px;
+  height: 50px;
+  width: 50px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  position: relative;
+  left: -25px;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.btn-save {
+  width: 80px;
+  background: linear-gradient(
+    0deg,
+    rgba(20, 167, 62, 1) 0%,
+    rgba(102, 247, 113, 1) 100%
+  );
+
+  &:disabled {
+    opacity: 0.5;
+    background: linear-gradient(
+      0deg,
+      rgb(201, 201, 201) 0%,
+      rgb(89, 89, 89) 100%
+    );
+  }
+}
+
+.is-invalid {
+  border-color: red;
+  color: red;
+  font-weight: bold;
+}
+
+.invalid-feedback {
+  border-color: red;
+  color: red;
+  font-weight: bold;
+}

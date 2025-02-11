@@ -1,0 +1,116 @@
+<ng-container *ngIf="isShowAuditInfo()">
+  <ng-container *ngIf="data">
+    <!-- Extra Info Component with Accordion -->
+    <div class="accordion" [attr.id]="getAccordionId('extraInfo')">
+      <div class="accordion-item">
+        <h2 class="accordion-header" [attr.id]="getAccordionId('headingOne')">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            [attr.data-bs-target]="'#' + getAccordionId('collapseOne')"
+            aria-expanded="false"
+            [attr.aria-controls]="getAccordionId('collapseOne')"
+          >
+            <!-- Condensed More Info text -->
+            <div class="container-fluid extra-info-container">
+              <div class="row">
+                <div class="col small-font-size text-center">
+                  <span>
+                    <i class="fas fa-info-circle me-1"></i>
+                    Más información
+                  </span>
+                </div>
+              </div>
+            </div>
+          </button>
+        </h2>
+
+        <!-- Full Extra Info when Expanded -->
+        <div
+          [attr.id]="getAccordionId('collapseOne')"
+          class="accordion-collapse collapse"
+          [attr.aria-labelledby]="getAccordionId('headingOne')"
+          [attr.data-bs-parent]="'#' + getAccordionId('extraInfo')"
+        >
+          <div class="accordion-body container-fluid">
+            <div class="audit-row" *ngIf="data?.createdBy">
+              <div class="user-info">
+                <strong>Creador:</strong> {{ getNameUserBy(data.createdBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.createdAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.productionBy">
+              <div class="user-info">
+                <strong>Productor:</strong>
+                {{ getNameUserBy(data.productionBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.productionAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.finishedBy">
+              <div class="user-info">
+                <strong>Finalizador:</strong>
+                {{ getNameUserBy(data.finishedBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.finishedAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.deliveredBy">
+              <div class="user-info">
+                <strong>Despachador:</strong>
+                {{ getNameUserBy(data.deliveredBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.deliveredAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.cancelledBy">
+              <div class="user-info">
+                <strong>Anulador:</strong> {{ getNameUserBy(data.cancelledBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.cancelledAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.billedBy">
+              <div class="user-info">
+                <strong>Facturador:</strong> {{ getNameUserBy(data.billedBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.billedAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.updatedBy">
+              <div class="user-info">
+                <strong>Editado:</strong> {{ getNameUserBy(data.updatedBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.updatedAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+
+            <div class="audit-row" *ngIf="data?.pausedBy">
+              <div class="user-info">
+                <strong>Pausador:</strong> {{ getNameUserBy(data.pausedBy) }}
+              </div>
+              <div class="date-info" *ngIf="showDates">
+                {{ getDateString(data.pausedAt) | utcToLocalTime: 'short' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,11 @@
+<div class="container-fluid">
+  <button
+    type="button"
+    [matTooltip]="this.tooltipName"
+    matTooltipPosition="right"
+    [ngClass]="this.isEditable ? 'btn btn-edit' : 'btn btn-view'"
+    (click)="buttonClicked()"
+  >
+    <mat-icon class="text-icon">{{ this.iconName }}</mat-icon>
+  </button>
+</div>

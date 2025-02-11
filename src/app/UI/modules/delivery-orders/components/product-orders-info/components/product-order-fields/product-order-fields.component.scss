@@ -1,0 +1,144 @@
+.no-bottom {
+  margin-bottom: -0.75em !important;
+  padding-bottom: -0.75em !important;
+}
+
+.no-left {
+  margin-left: -1.25em !important;
+  padding-left: -1.25em !important;
+}
+
+.no-right {
+  margin-right: -1.25em !important;
+  padding-right: -1.25em !important;
+}
+
+:host ::ng-deep {
+  display: block;
+  width: 100%;
+
+  .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+
+  .mat-mdc-form-field-appearance-outline .mat-mdc-form-field-flex {
+    margin-top: 0;
+    padding: 0 4px;
+  }
+
+  .container-fluid {
+    width: 100%;
+    padding: 0;
+
+    .row {
+      width: 100%;
+      margin: 0;
+      padding-bottom: 0.25rem;
+      align-items: center;
+
+      // Ensure columns take proper width
+      .col-2 {
+        width: 16.66%;
+      }
+      .col-3 {
+        width: 25%;
+      }
+      .col {
+        flex: 1;
+      }
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+
+    &.hide-label {
+      .mdc-floating-label {
+        display: none;
+      }
+
+      textarea.mat-mdc-input-element {
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+    }
+
+    .mat-mdc-form-field-wrapper {
+      padding-bottom: 0;
+      margin: 0;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding: 8px 0 !important;
+      min-height: unset;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.background-white {
+  background-color: white;
+}
+
+.animated-border {
+  border-width: thin;
+  border-style: solid;
+  border-color: #1976d2;
+  border-radius: 10px / 30px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  transition: border-color 0.3s ease-in-out;
+  animation-name: blink;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: 10;
+}
+
+@keyframes blink {
+  0% {
+    border-color: #ff0000;
+  }
+  25% {
+    border-color: #5cd042;
+  }
+  50% {
+    border-color: #224a86;
+  }
+  75% {
+    border-color: #7b15ce;
+  }
+  100% {
+    border-color: #ffea00;
+  }
+}
+
+.bg-pending {
+  background-color: #fdf9e7;
+}
+
+.bg-finished {
+  background-color: #c2ffc2;
+}
+
+.bg-cancelled {
+  background-color: #fac7d0ff;
+}
+
+.bg-dispatched {
+  background-color: #96dcd6;
+}

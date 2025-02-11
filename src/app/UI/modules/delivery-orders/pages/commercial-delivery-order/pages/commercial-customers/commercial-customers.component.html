@@ -1,0 +1,47 @@
+<!--    Clients Grid  -->
+<app-customers-search
+  [title]="clientsTitle"
+  [currentModule]="moduleName"
+></app-customers-search>
+<!--    End Clients Grid  -->
+
+<!--    All Delivery Orders  -->
+<mat-tab-group #tabsLastOrders>
+  <!-- Ultimos 50 del dia -->
+  <mat-tab #tabOrdersLast>
+    <ng-template mat-tab-label>
+      <app-pestania-label
+        [title]="ordersCommercialLastOrdersTitle"
+        [icon]="ordersLastReadyBillingIcon"
+      ></app-pestania-label>
+    </ng-template>
+    <ng-template matTabContent>
+      <app-delivery-orders-search
+        [title]="deliveryOrdersTitle"
+        [currentModule]="moduleName"
+        [screenType]="screenType"
+        (onActiveDeliveryOrderView)="onActiveDeliveryOrderView($event)"
+      ></app-delivery-orders-search>
+    </ng-template>
+  </mat-tab>
+  <!-- End Ultimos 50 del dia -->
+
+  <!-- Busqueda de ordenes -->
+  <mat-tab #tabOrdersLastSearch>
+    <ng-template mat-tab-label>
+      <app-pestania-label
+        [title]="ordersCommercialSearchOrdersTitle"
+        [icon]="ordersLastSearchIcon"
+      ></app-pestania-label>
+    </ng-template>
+    <ng-template matTabContent>
+      <app-delivery-orders-search
+        [title]="deliveryOrdersTitle"
+        [currentModule]="moduleName"
+        [advancedSearch]="true"
+      ></app-delivery-orders-search>
+    </ng-template>
+  </mat-tab>
+  <!-- End Busqueda de ordenes -->
+</mat-tab-group>
+<!--    End All Delivery Orders  -->

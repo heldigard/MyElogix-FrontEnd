@@ -1,0 +1,25 @@
+.disable-pointer-events {
+  pointer-events: none;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+.sidenav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+@media (max-width: 991px) {
+  .sidenav {
+    position: relative;
+  }
+}

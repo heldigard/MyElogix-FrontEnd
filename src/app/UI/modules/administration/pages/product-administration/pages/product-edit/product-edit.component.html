@@ -1,0 +1,113 @@
+<form [formGroup]="productForm" novalidate (ngSubmit)="onSaveForm()">
+  <div class="container-fluid mt-3" *ngIf="this.productService.currentItem()">
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field appearance="outline" class="no-bottom">
+          <mat-label>Referencia</mat-label>
+          <input matInput [readonly]="true" formControlName="reference" />
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field appearance="outline" class="no-bottom">
+          <mat-label>Descripcion</mat-label>
+          <input matInput formControlName="description" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <ng-container formGroupName="type">
+        <div class="col-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo</mat-label>
+            <mat-select
+              formControlName="id"
+              (selectionChange)="onProductTypeSelectionChange($event)"
+            >
+              <mat-form-field>
+                <input
+                  matInput
+                  autocomplete="off"
+                  placeholder="Buscar..."
+                  (keyup)="onKeyProductType($event.target)"
+                />
+              </mat-form-field>
+              <mat-option
+                *ngFor="let productType of filteredProductTypeList()"
+                [value]="productType.id"
+              >
+                {{ productType.name?.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <ng-container formGroupName="category">
+            <mat-form-field appearance="outline">
+              <mat-label>Categoria</mat-label>
+              <input
+                matInput
+                readonly="true"
+                autocomplete="off"
+                formControlName="name"
+              />
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="row">
+      <ng-container formGroupName="type">
+        <div class="col-6">
+          <mat-label>Es Medible:</mat-label>
+          <mat-radio-group
+            formControlName="isMeasurable"
+            (change)="onIsMeasurableSelectionChange($event)"
+          >
+            <mat-radio-button value="false">NO</mat-radio-button>
+            <mat-radio-button value="true">SI</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </ng-container>
+      <ng-container formGroupName="status">
+        <div class="col-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select
+              formControlName="id"
+              (selectionChange)="onStatusSelectionChange($event)"
+            >
+              <mat-option *ngFor="let status of statusList" [value]="status.id">
+                {{ status.description?.toUpperCase() }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</form>
+<br />
+<mat-divider></mat-divider>
+<!--  Botones-->
+<div class="row justify-content-end">
+  <div class="col-2">
+    <button
+      class="btn btn-save"
+      type="button"
+      matTooltip="Guardar Producto"
+      matTooltipPosition="right"
+      [disabled]="this.isSaving || !this.productForm.valid"
+      (click)="onSaveForm()"
+    >
+      <ng-container *ngIf="this.isSaving">
+        <mat-icon>
+          <mat-spinner diameter="20"></mat-spinner>
+        </mat-icon>
+      </ng-container>
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
+  <div class="col-2" *ngIf="!this.productForm.valid">
+    <span class="is-invalid"> Primero Corrija los Errores </span>
+  </div>
+</div>

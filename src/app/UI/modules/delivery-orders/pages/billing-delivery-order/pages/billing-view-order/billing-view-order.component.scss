@@ -1,0 +1,12 @@
+.boton-print-flotante {
+  position: fixed;
+  top: 80px; /* Ajusta este valor según la posición deseada */
+  right: 20px; /* Ajusta este valor según la posición deseada */
+  z-index: 1000; /* Asegura que el botón esté por encima de otros elementos */
+}
+
+@media print {
+  .hide-print {
+    display: none !important;
+  }
+}

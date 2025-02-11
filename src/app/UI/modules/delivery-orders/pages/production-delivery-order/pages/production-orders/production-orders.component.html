@@ -1,0 +1,19 @@
+<app-delivery-orders-search
+  [statusToShow]="EStatus.PENDING"
+  [title]="pendingTitle"
+  [screenType]="screenType"
+  (onActiveDeliveryOrderView)="onActiveDeliveryOrderView($event)"
+></app-delivery-orders-search>
+<mat-divider></mat-divider>
+<app-delivery-orders-search
+  [statusToShow]="EStatus.PRODUCTION"
+  [title]="productionTitle"
+  [screenType]="screenType"
+  (onActiveDeliveryOrderView)="onActiveDeliveryOrderView($event)"
+></app-delivery-orders-search>
+<mat-divider></mat-divider>
+<app-delivery-orders-search
+  [title]="allTitle"
+  [screenType]="screenType"
+  (onActiveDeliveryOrderView)="onActiveDeliveryOrderView($event)"
+></app-delivery-orders-search>

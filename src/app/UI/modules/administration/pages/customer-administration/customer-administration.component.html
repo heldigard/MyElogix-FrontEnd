@@ -1,0 +1,61 @@
+<div id="content">
+  <xng-breadcrumb [separator]="separatorTemplate" class="breadcrumb">
+    <ng-container *xngBreadcrumbItem="let breadcrumb">
+      <ng-container>
+        <div class="breadcrumb__item">
+          {{ breadcrumb | titlecase }}
+        </div></ng-container
+      >
+    </ng-container>
+  </xng-breadcrumb>
+</div>
+<ng-template #separatorTemplate><mat-icon>arrow_right</mat-icon></ng-template>
+
+<div class="container-fluid">
+  <nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_CLIENTS_MAIN]"
+      routerLinkActive
+      #adminClients="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [active]="adminClients.isActive"
+      [ngClass]="adminClients.isActive ? 'active-link' : 'inactive-link'"
+    >
+      <app-pestania-label
+        [title]="clientsTitle"
+        [icon]="clientsIcon"
+      ></app-pestania-label>
+    </a>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_CLIENTS_EDIT]"
+      routerLinkActive
+      #adminEditClient="routerLinkActive"
+      [active]="adminEditClient.isActive"
+      [disabled]="!adminEditClient.isActive"
+      [ngClass]="adminEditClient.isActive ? 'active-link' : 'inactive-link'"
+      ><app-pestania-label
+        [title]="editClientTitle"
+        [icon]="editClientIcon"
+      ></app-pestania-label>
+    </a>
+    <a
+      mat-tab-link
+      [routerLink]="[URL_ADMIN_CLIENTS_EXCEL]"
+      routerLinkActive
+      #adminExcelClients="routerLinkActive"
+      [active]="adminExcelClients.isActive"
+      [ngClass]="adminExcelClients.isActive ? 'active-link' : 'inactive-link'"
+      ><app-pestania-label
+        [title]="editClientsExcelTitle"
+        [icon]="editClientsExcelIcon"
+      ></app-pestania-label>
+    </a>
+  </nav>
+</div>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

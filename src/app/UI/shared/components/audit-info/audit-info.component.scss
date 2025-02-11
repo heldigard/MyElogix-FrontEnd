@@ -1,0 +1,91 @@
+.bg-pending {
+  background-color: #fdf9e7;
+}
+
+.bg-finished {
+  background-color: #c2ffc2;
+}
+
+.bg-cancelled {
+  background-color: #fac7d0ff;
+}
+
+.bg-dispatched {
+  background-color: #96dcd6;
+}
+
+.accordion {
+  margin-top: 1rem;
+  align-items: center;
+
+  .accordion-button {
+    padding-top: 0.25rem; // Adjusted padding
+    padding-bottom: 0.25rem; // Adjusted padding
+    display: flex;
+    font-size: 0.8rem;
+    color: #666;
+    align-items: center; // Center align items vertically
+
+    &::after {
+      margin-bottom: 0; // Adjusted margin
+    }
+
+    &:not(.collapsed) {
+      background-color: inherit;
+    }
+
+    .extra-info-container {
+      padding: 0; // Remove padding from container
+      .row {
+        margin: 0; // Remove margin from row
+        .col {
+          padding: 0; // Remove padding from column
+        }
+      }
+    }
+  }
+
+  .container {
+    .row {
+      margin: 0;
+      padding: 0;
+      .small-font-size {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        i {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  .accordion-body {
+    padding: 0.5rem 0;
+  }
+}
+
+.small-font-size {
+  font-size: 0.875rem;
+}
+
+.container {
+  max-width: 100%;
+  padding: 8px;
+}
+
+.audit-row {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 10px;
+  margin: 4px 0;
+}
+.user-info {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.date-info {
+  text-align: right;
+}

@@ -1,0 +1,10 @@
+<ng-container *ngIf="this.imgForValue">
+  <img
+    [ngClass]="iconClass"
+    width="30"
+    height="40"
+    [ngSrc]="this.imgForValue"
+    alt="value"
+    [matTooltip]="this.tooltip"
+  />
+</ng-container>

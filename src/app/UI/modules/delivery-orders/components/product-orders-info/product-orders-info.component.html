@@ -1,0 +1,61 @@
+<ng-container
+  *ngFor="
+    let enriched of enrichedOrders();
+    let i = index;
+    trackBy: trackByOrder
+  "
+>
+  <div class="accordion" id="productOrdersAccordion">
+    <div
+      class="accordion-item product-order-row {{ enriched.backgroundClass }}"
+    >
+      <!-- Accordion Header -->
+      <h2 class="accordion-header" [id]="'heading' + i">
+        <button
+          class="accordion-button"
+          type="button"
+          [attr.data-bs-toggle]="'collapse'"
+          [attr.data-bs-target]="'#collapse' + i"
+          [attr.aria-expanded]="enriched.shouldExpand"
+          [attr.aria-controls]="'collapse' + i"
+        >
+          <app-product-order-header
+            [productOrder]="enriched.order"
+            [screenType]="screenType"
+          >
+          </app-product-order-header>
+        </button>
+      </h2>
+
+      <!-- Accordion Body -->
+      <div
+        [id]="'collapse' + i"
+        class="accordion-collapse collapse"
+        [ngClass]="{ show: enriched.shouldExpand }"
+        [attr.aria-labelledby]="'heading' + i"
+        data-bs-parent="#productOrdersAccordion"
+      >
+        <div class="accordion-body">
+          <!-- Fields Component -->
+          <app-product-order-fields
+            [productOrder]="enriched.order"
+            [screenType]="screenType"
+            (lastFieldEntered)="onLastFieldEntered()"
+          >
+          </app-product-order-fields>
+
+          <app-audit-info [data]="enriched.order"> </app-audit-info>
+
+          <!-- Actions Component -->
+          <app-product-order-actions
+            [productOrder]="enriched.order"
+            [screenType]="screenType"
+            [orderStatus]="enriched.orderStatus"
+            (advanceStatus)="onAdvanceStatus($event)"
+          >
+          </app-product-order-actions>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

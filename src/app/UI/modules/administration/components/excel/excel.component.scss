@@ -1,0 +1,71 @@
+.btn-download {
+  display: inline-block;
+  padding: 12px 12px 10px;
+  border: 0;
+  border-radius: 3px;
+  background: #bf4d28;
+  text-decoration: none;
+  transition: all 1.2s ease-in-out;
+
+  i::after {
+    content: '\f019';
+    font-size: 40px;
+    color: #fff;
+  }
+
+  &:hover {
+    animation: pulse 0.2s 2 both;
+  }
+
+  &.loading {
+    i {
+      animation: loading 2s infinite linear;
+
+      &::after {
+        content: '\f1ce';
+      }
+    }
+  }
+
+  &.success {
+    border-radius: 50%;
+    background: #80bca3;
+
+    i::after {
+      content: '\f00c';
+      color: transparent;
+      animation: change-icon 1s 0.6s linear both;
+    }
+  }
+}
+
+.card {
+  box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);
+  -webkit-box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);
+  -moz-box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);
+  animation: ease-in-out 0.7s;
+  width: 200px;
+  transition: 0.3s;
+
+  &:hover {
+    box-shadow: -6px 10px 21px 4px rgba(217, 217, 217, 0.75);
+    -webkit-box-shadow: -6px 10px 21px 4px rgba(217, 217, 217, 0.75);
+    -moz-box-shadow: -6px 10px 21px 4px rgba(255, 255, 255, 0.75);
+    transform: scale(1.1);
+  }
+  &__title {
+    margin-left: 4px;
+  }
+}
+
+/////////////////////////////////////////////////
+
+.download {
+  background-color: #88d0ff;
+  color: #000000;
+}
+
+.upload {
+  background-color: #81ff76;
+  color: #000000;
+}

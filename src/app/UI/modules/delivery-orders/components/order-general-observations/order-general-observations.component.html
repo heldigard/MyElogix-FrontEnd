@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+  <div class="container-fluid">
+    <div class="row justify-content-center pt-1">
+      <mat-form-field
+        #observationField
+        [appearance]="getObservationAppearance()"
+        [ngClass]="observationClass"
+      >
+        <mat-label>Observaciones Generales</mat-label>
+        <textarea
+          matInput
+          [readonly]="!isEditableObservation"
+          formControlName="generalObservations"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="1"
+          cdkAutosizeMaxRows="5"
+          (input)="onObservationInput($event)"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

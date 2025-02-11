@@ -1,0 +1,193 @@
+<ng-container *ngIf="order()">
+  <form [formGroup]="orderForm">
+    <div class="container-fluid mt-3">
+      <div class="row m-1">
+        <div class="col-2" *ngIf="order().customer?.membership?.name">
+          <img
+            ngClass="img-membership-flotante"
+            width="45"
+            height="60"
+            [ngSrc]="this.imgForMembership"
+            alt="value"
+            matTooltip="{{ order().customer?.membership?.name }}"
+          />
+        </div>
+      </div>
+      <div class="row justify-content-between m-1">
+        <div
+          class="col-6 ps-1 pe-1"
+          *ngIf="this.screenType !== SCREEN_TYPE_VIEW_BILL"
+        >
+          <ng-container formGroupName="createdAt">
+            <mat-form-field
+              appearance="outline"
+              class="no-bottom condensed-form-field"
+            >
+              <mat-label>Fecha: DD/MM/AAAA</mat-label>
+              <input matInput readonly="true" formControlName="date" />
+            </mat-form-field>
+          </ng-container>
+        </div>
+        <div
+          class="col-6 ps-1 pe-1"
+          *ngIf="this.screenType !== SCREEN_TYPE_VIEW_BILL"
+        >
+          <ng-container formGroupName="createdAt">
+            <mat-form-field
+              appearance="outline"
+              class="no-bottom condensed-form-field"
+            >
+              <mat-label>Hora: h:mm:ss</mat-label>
+              <input matInput readonly="true" formControlName="hour" />
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col ps-1 pe-1">
+          <ng-container formGroupName="customer">
+            <mat-form-field
+              appearance="outline"
+              class="no-bottom fit-width condensed-form-field"
+            >
+              <mat-label>Nombre Cliente</mat-label>
+              <input matInput readonly="true" formControlName="name" />
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </div>
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Direccion </mat-panel-title
+            ><mat-panel-description>
+              Mostrar Direccion
+              <ng-container *ngIf="order().branchOffice?.city?.name">
+                <label>{{ order().branchOffice?.city?.name }}</label>
+              </ng-container>
+              <ng-container *ngIf="order().deliveryZone?.name">
+                <label [class]="deliveryZoneNameClass">{{
+                  order().deliveryZone?.name
+                }}</label>
+              </ng-container>
+              <mat-icon> location_on</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="row m-1">
+            <div class="col ps-1 pe-1">
+              <ng-container formGroupName="branchOffice">
+                <mat-form-field appearance="outline">
+                  <mat-label>Oficina</mat-label>
+                  <ng-container
+                    *ngIf="
+                      screenType == SCREEN_TYPE_VIEW_PRODUCTION;
+                      then viewBranchOffice;
+                      else createViewBranchOffice
+                    "
+                  >
+                  </ng-container>
+                  <ng-template #viewBranchOffice>
+                    <input matInput readonly="true" formControlName="address" />
+                  </ng-template>
+                  <ng-template #createViewBranchOffice>
+                    <mat-select
+                      formControlName="id"
+                      (selectionChange)="onBranchOfficeSelectionChange($event)"
+                    >
+                      <mat-option
+                        *ngFor="
+                          let office of order()?.customer?.branchOfficeList
+                        "
+                        [value]="office.id"
+                      >
+                        {{ office.address }}
+                      </mat-option>
+                    </mat-select>
+                  </ng-template>
+                </mat-form-field>
+              </ng-container>
+            </div>
+            <div class="col ps-1 pe-1">
+              <ng-container formGroupName="city">
+                <mat-form-field appearance="outline">
+                  <mat-label>Ciudad</mat-label>
+                  <input matInput readonly="true" formControlName="name" />
+                </mat-form-field>
+              </ng-container>
+            </div>
+            <div class="col ps-1 pe-1">
+              <ng-container formGroupName="neighborhood">
+                <mat-form-field appearance="outline">
+                  <mat-label>Barrio</mat-label>
+                  <input matInput readonly="true" formControlName="name" />
+                </mat-form-field>
+              </ng-container>
+            </div>
+            <div class="col ps-1 pe-1">
+              <ng-container formGroupName="deliveryZoneBasic">
+                <mat-form-field appearance="outline">
+                  <mat-label>Ruta</mat-label>
+                  <input matInput readonly="true" formControlName="name" />
+                </mat-form-field>
+              </ng-container>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <!--  ///// Contact Persona ///////-->
+    <div
+      class="container-fluid"
+      *ngIf="
+        order()?.customer?.id! > -1 &&
+        order()?.status?.name !== EStatus.PRODUCTION
+      "
+    >
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Contacto </mat-panel-title
+            ><mat-panel-description
+              >Mostrar Contacto
+              <mat-icon>account_circle</mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <ng-container formGroupName="branchOffice">
+            <ng-container formGroupName="contactPerson">
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Contacto</mat-label>
+                    <input matInput readonly="true" formControlName="name" />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Celular Primario</mat-label>
+                    <input
+                      matInput
+                      readonly="true"
+                      formControlName="mobileNumberPrimary"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Celular Secundario</mat-label>
+                    <input
+                      matInput
+                      readonly="true"
+                      formControlName="mobileNumberSecondary"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <!--  ///// EndContact Persona ///////-->
+  </form>
+</ng-container>

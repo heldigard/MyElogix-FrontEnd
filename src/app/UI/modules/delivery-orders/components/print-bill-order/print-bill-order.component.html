@@ -1,0 +1,159 @@
+<div class="d-flex justify-content-end">
+  <button
+    mat-button
+    class="button-17"
+    type="button"
+    matTooltip="Imprimir"
+    matTooltipPosition="right"
+    (click)="this.printOrders(divPrint)"
+  >
+    <img
+      width="30"
+      height="30"
+      ngSrc="../../../../../../assets/icons/printer-icon.png"
+      alt="print"
+      height="30"
+    />
+  </button>
+</div>
+
+<!--Printable Area-->
+<div hidden="true">
+  <div #divPrint>
+    <div>
+      <div class="container-fluid" *ngIf="normalizedOrders.length > 0">
+        <!--      Cliente-->
+        <table class="table table-bordered table-sm">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Oficina</th>
+              <th scope="col">Ciudad</th>
+              <th scope="col">Barrio</th>
+              <th scope="col">Ruta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">
+                {{ getValueCustomerName(normalizedOrders[0]) }}
+              </th>
+              <td>{{ getValueCustomerPhone(normalizedOrders[0]) }}</td>
+              <td>
+                {{ getValueAddress(normalizedOrders[0]) }}
+              </td>
+              <td>
+                {{ getValueCityName(normalizedOrders[0]) }}
+              </td>
+              <td>
+                {{ getValueNeighborhoodName(normalizedOrders[0]) }}
+              </td>
+              <td>
+                {{ getValueDeliveryZoneName(normalizedOrders[0]) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngFor="let order of normalizedOrders; let i = index">
+          <div *ngIf="order.generalObservations" class="bold-text">
+            <strong
+              >#{{ order.id }} Obs:
+              <div
+                *ngFor="let line of order.generalObservations | sliceText: 70"
+              >
+                {{ line }}
+              </div>
+            </strong>
+          </div>
+        </div>
+        <!--      Fin Cliente-->
+        <br />
+        <!--    Ordenes List-->
+        <div class="row center">
+          <!--    Ordenes List-->
+          <div class="row center">
+            <!--      Product List-->
+            <table class="table table-bordered table-striped table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">IM</th>
+                  <th scope="col">#Ord</th>
+                  <th scope="col">Ref</th>
+                  <th scope="col">Desc</th>
+                  <th scope="col">Cant</th>
+                  <th scope="col">Med1</th>
+                  <th scope="col">Med2</th>
+                  <th scope="col">Um</th>
+                  <th scope="col">Tipo</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Observacion</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let order of normalizedOrders; let i = index">
+                <tr
+                  *ngFor="
+                    let productOrder of order.productOrders;
+                    let j = index
+                  "
+                >
+                  <ng-container *ngIf="productOrder.isCancelled == false">
+                    <td>{{ order.isBilled ? '*' : '' }}</td>
+                    <th scope="row">{{ order.id }}</th>
+                    <td>{{ productOrder.product.reference }}</td>
+                    <td>
+                      <ng-container
+                        *ngFor="
+                          let line of productOrder.product.description ?? ''
+                            | sliceText: 14
+                        "
+                      >
+                        {{ line }}<br />
+                      </ng-container>
+                    </td>
+                    <td>{{ getValueAmount(productOrder) }}</td>
+                    <td>{{ getValueMeasure1(productOrder) }}</td>
+                    <td>{{ getValueMeasure2(productOrder) }}</td>
+                    <td>{{ getValueMetricUnit(productOrder) }}</td>
+                    <td>{{ getValueMeasureDetail(productOrder) }}</td>
+                    <td>
+                      {{
+                        getValueFecha(productOrder) | utcToLocalTime: 'short'
+                      }}
+                    </td>
+                    <td class="bold-text">
+                      <strong>
+                        <ng-container
+                          *ngFor="
+                            let line of productOrder.observation ?? ''
+                              | sliceText: 14
+                          "
+                        >
+                          {{ line }}<br />
+                        </ng-container>
+                      </strong>
+                    </td>
+                  </ng-container>
+                </tr>
+              </tbody>
+            </table>
+            <!--   Fin Product List-->
+            <span
+              >Impreso:
+              {{
+                this.currentUser.firstName +
+                  ' ' +
+                  this.currentUser.lastName +
+                  ' (' +
+                  this.currentUser.username +
+                  ')'
+              }}</span
+            >
+          </div>
+        </div>
+      </div>
+      <!--  Fin Ordenes List-->
+    </div>
+  </div>
+</div>
+<!-- End Printable Area-->

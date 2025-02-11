@@ -1,0 +1,106 @@
+<div class="container-fluid">
+  <div class="row d-flex justify-content-center">
+    <div class="col-6 d-flex justify-content-center">
+      <mat-card class="mat-elevation-z4 mt-4 card download">
+        <mat-card-title class="card__title">Descargar</mat-card-title>
+        <a (click)="downloadExcelFile()">
+          <mat-card-content>
+            <div class="row justify-content-center">
+              <div class="col-9">Descargar Archivo Excel</div>
+              <div class="col-3"><mat-icon>cloud_download</mat-icon></div>
+            </div>
+          </mat-card-content>
+        </a>
+      </mat-card>
+    </div>
+    <div class="col-6 d-flex justify-content-center">
+      <mat-card class="mat-elevation-z4 mt-4 card upload">
+        <mat-card-title class="card__title">Cargar</mat-card-title>
+        <a (click)="file_input.click()">
+          <mat-card-content>
+            <div class="row justify-content-center">
+              <div class="col-9">Cargar Archivo Excel</div>
+              <div class="col-3"><mat-icon>cloud_upload</mat-icon></div>
+            </div>
+          </mat-card-content>
+        </a>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-center mt-4">
+    <div class="col-6 d-flex justify-content-center"></div>
+    <div class="col-6 d-flex justify-content-center">
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field style="width: 100%">
+            <mat-label>Seleccionar Archivo</mat-label>
+            <button
+              class="btn btn-info"
+              mat-icon-button
+              matPrefix
+              (click)="file_input.click()"
+            >
+              <mat-icon>attach_file</mat-icon>
+            </button>
+            <input
+              type="text"
+              readonly
+              matInput
+              [formControl]="displayFileName"
+            />
+            <input
+              type="file"
+              multiple
+              hidden
+              #file_input
+              (change)="onFileChange(file_input.files)"
+            />
+            <mat-error>Seleccione un Archivo</mat-error>
+          </mat-form-field>
+          <br /><br />
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions align="end">
+          <button
+            class="btn btn-success"
+            mat-stroked-button
+            color="primary"
+            [disabled]="displayFileName.invalid"
+            (click)="uploadExcelFile()"
+          >
+            Enviar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <br />
+    <mat-divider></mat-divider>
+    <br />
+    <div *ngIf="this.fileToUpload" class="progress">
+      <div
+        class="progress-bar progress-bar-info progress-bar-striped"
+        role="progressbar"
+        attr.aria-valuenow="{{ progress }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [ngStyle]="{ width: progress + '%' }"
+      >
+        {{ progress }}%
+      </div>
+    </div>
+    <br />
+    <div class="mt-2" *ngIf="this.responseMessage?.message">
+      <mat-form-field style="width: 100%">
+        <mat-label>Resultado</mat-label>
+        <textarea
+          readonly
+          matInput
+          [(ngModel)]="this.responseMessage.message"
+          rows="5"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

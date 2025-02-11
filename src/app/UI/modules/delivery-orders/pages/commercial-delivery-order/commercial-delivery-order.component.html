@@ -1,0 +1,56 @@
+<nav mat-tab-nav-bar class="mt-1" [tabPanel]="tabPanel">
+  <button
+    type="button"
+    class="btn btn-link shadow-none"
+    (click)="onClickMain()"
+  >
+    <a
+      mat-tab-link
+      [routerLink]="[URL_COMMERCIAL_MAIN]"
+      routerLinkActive
+      #commercialMain="routerLinkActive"
+      [active]="commercialMain.isActive"
+      [ngClass]="commercialMain.isActive ? 'active-link' : 'inactive-link'"
+    >
+      <app-pestania-label
+        [title]="clientsTitle"
+        [icon]="clientsIcon"
+      ></app-pestania-label>
+    </a>
+  </button>
+  <a
+    mat-tab-link
+    [routerLink]="[URL_COMMERCIAL_CREATE]"
+    routerLinkActive
+    #commercialCreate="routerLinkActive"
+    [active]="commercialCreate.isActive"
+    [ngClass]="commercialCreate.isActive ? 'active-link' : 'inactive-link'"
+    [disabled]="!commercialCreate.isActive"
+    ><app-pestania-label
+      [title]="createOrderTitle"
+      [icon]="createOrderIcon"
+    ></app-pestania-label>
+  </a>
+  <a
+    mat-tab-link
+    [routerLink]="[URL_COMMERCIAL_EDIT]"
+    routerLinkActive
+    #orderEdit="routerLinkActive"
+    [active]="orderEdit.isActive"
+    [ngClass]="orderEdit.isActive ? 'active-link' : 'inactive-link'"
+    [disabled]="!orderEdit.isActive"
+    ><app-pestania-label
+      [title]="editOrderTitle"
+      [icon]="editOrderIcon"
+    ></app-pestania-label
+  ></a>
+</nav>
+<ng-container *ngIf="!commercialMain.isActive">
+  <br />
+  <br />
+</ng-container>
+<mat-tab-nav-panel #tabPanel>
+  <div [@routeAnimations]="animationState">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</mat-tab-nav-panel>

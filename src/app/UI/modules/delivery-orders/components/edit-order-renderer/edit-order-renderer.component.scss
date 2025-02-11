@@ -1,0 +1,60 @@
+/* CSS */
+.btn {
+  border-radius: 50px;
+  box-shadow:
+    rgba(217, 210, 198, 0.2) 0 -25px 18px -14px inset,
+    rgba(227, 221, 213, 0.15) 0 1px 2px,
+    rgba(218, 217, 213, 0.15) 0 2px 4px,
+    rgba(208, 204, 199, 0.15) 0 4px 8px,
+    rgba(192, 191, 185, 0.15) 0 8px 16px,
+    rgba(180, 179, 174, 0.15) 0 16px 32px;
+  cursor: pointer;
+  display: inline-block;
+  font-family:
+    CerebriSans-Regular,
+    -apple-system,
+    system-ui,
+    Roboto,
+    sans-serif;
+  //padding: 7px 20px;
+  //text-align: center;
+  //text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 10px;
+  height: 34px;
+  width: 34px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  position: relative;
+  left: -28px;
+  top: 2px;
+}
+
+.btn:disabled,
+btn[disabled] {
+  border: 1px solid #999999;
+  color: #666666;
+  background: #999999;
+}
+
+.btn:hover {
+  transform: scale(1.5);
+}
+
+.btn .text-icon {
+  position: relative;
+  left: -7px;
+  top: -1px;
+}
+
+.btn-edit {
+  background-color: #fbeec2;
+  color: #ff6a00;
+}
+
+.btn-view {
+  background-color: #c2eafb;
+  color: blue;
+}

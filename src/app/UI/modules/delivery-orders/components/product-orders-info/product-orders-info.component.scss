@@ -1,0 +1,113 @@
+.order-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .stat-item {
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: #f5f5f5;
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+.accordion {
+  .accordion-item {
+    margin-bottom: 1rem;
+
+    .accordion-button {
+      width: 100%;
+      padding-top: 0;
+      padding-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+
+      &:not(.collapsed) {
+        background-color: inherit;
+      }
+
+      &::after {
+        margin-left: auto;
+      }
+    }
+
+    .accordion-body {
+      padding: 0;
+
+      ::ng-deep {
+        app-product-order-fields {
+          display: block;
+          margin-bottom: 0;
+        }
+
+        app-product-order-extra-info {
+          display: block;
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid #eee;
+        }
+      }
+    }
+  }
+}
+
+// Add these new styles
+:host ::ng-deep {
+  .accordion-button {
+    app-product-order-header {
+      width: 100%;
+
+      .container-fluid {
+        width: 100%;
+        padding: 0;
+
+        .row {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          align-items: center;
+
+          // Ensure columns take proper width
+          .col-2 {
+            width: 16.66%;
+          }
+          .col-3 {
+            width: 25%;
+          }
+          .col {
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.product-order-row {
+  overflow: hidden;
+  transition: all 150ms ease-out;
+
+  &.ng-leave {
+    transform-origin: top;
+    min-height: 0;
+  }
+}
+
+.bg-pending {
+  background-color: #fdf9e7;
+}
+
+.bg-finished {
+  background-color: #c2ffc2;
+}
+
+.bg-cancelled {
+  background-color: #fac7d0ff;
+}
+
+.bg-dispatched {
+  background-color: #96dcd6;
+}

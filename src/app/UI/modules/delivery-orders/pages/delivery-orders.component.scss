@@ -1,0 +1,128 @@
+@import 'variables';
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.menu-card {
+  margin: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  mat-card-content {
+    p {
+      margin: 0;
+      color: #666;
+    }
+  }
+}
+
+.comercial {
+  background-color: $comercial-bg-color;
+  color: #000;
+}
+
+.produccion {
+  background-color: $produccion-bg-color;
+  color: #000000;
+}
+
+.despachos {
+  background-color: $despachos-bg-color;
+  color: #000000;
+}
+
+.facturacion {
+  background-color: $facturacion-bg-color;
+  color: #000000;
+}
+
+/////////////////////////////////////////////////
+
+.xng-breadcrumb-root {
+  padding: 8px 16px;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #e7f1f1;
+}
+
+.xng-breadcrumb-separator {
+  padding: 0 4px;
+}
+
+.breadcrumb {
+  display: flex;
+  border-radius: 10px;
+  margin: auto;
+  text-align: center;
+  top: 50%;
+  width: 100%;
+  height: 40px;
+  //transform: translateY(-50%);
+  z-index: 1;
+  justify-content: center;
+}
+
+.breadcrumb__item {
+  height: 100%;
+  background-color: white;
+  color: #252525;
+  font-family: 'Oswald', sans-serif;
+  border-radius: 7px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  transform: skew(-21deg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  margin: 5px;
+  padding: 0 40px;
+  cursor: pointer;
+}
+
+.breadcrumb__item:hover {
+  background: #27883c;
+  color: #fff;
+}
+
+.breadcrumb__inner {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  z-index: 2;
+  transform: skew(21deg);
+}
+
+.breadcrumb__title {
+  font-size: 16px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

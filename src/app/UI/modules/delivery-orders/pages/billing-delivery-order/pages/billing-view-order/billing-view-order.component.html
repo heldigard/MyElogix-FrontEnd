@@ -1,0 +1,53 @@
+<ng-container *ngIf="orderResponseList.length > 0">
+  <!--Botones-->
+  <div class="container-fluid mt-2 boton-print-flotante">
+    <app-print-bill-order
+      [orders]="deliveryOrdersForPrint"
+      (printEvent)="onPrint()"
+    ></app-print-bill-order>
+  </div>
+  <!--Data Ordenes-->
+  <div>
+    <app-order-customer-info
+      [screenType]="SCREEN_TYPE_VIEW_BILL"
+    ></app-order-customer-info>
+  </div>
+
+  <mat-divider></mat-divider>
+  <!--DeliveryOrdersList-->
+  <ng-container *ngFor="let orderResponse of orderResponseList">
+    <app-order-header
+      [screenType]="SCREEN_TYPE_VIEW_BILL"
+      [orderId]="orderResponse?.order?.id!"
+      [orderStatus]="orderResponse?.order?.status!"
+    >
+    </app-order-header>
+
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <label>
+          Creado:
+          {{
+            getDateAsString(orderResponse?.order?.createdAt!)
+              | utcToLocalTime: 'short'
+          }}</label
+        >
+      </div>
+      <div class="col-4">
+        <label>
+          Creador:
+          {{ getUserByAsString(orderResponse?.order?.createdBy!) }}</label
+        >
+      </div>
+    </div>
+
+    <app-order-stats [orderResponse]="orderResponse!"></app-order-stats>
+
+    <!-- <app-product-orders-info
+      [productOrders]="orderResponse?.order?.productOrders"
+      [screenType]="SCREEN_TYPE_VIEW_BILL"
+    ></app-product-orders-info> -->
+
+    <mat-divider></mat-divider>
+  </ng-container>
+</ng-container>
