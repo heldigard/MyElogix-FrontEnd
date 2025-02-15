@@ -20,127 +20,207 @@ import { NgIf, NgStyle } from '@angular/common';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { IExcelService } from '../../../../../shared/domain/models/auth/IExcelService';
 import { ResponseMessageDTO } from '../../../../../shared/domain/models/ResponseMessageDTO';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-excel',
-    imports: [
-        MatIcon,
-        MatCard,
-        MatCardContent,
-        MatCardTitle,
-        MatFormField,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatDivider,
-        MatCardActions,
-        NgStyle,
-        NgIf,
-        FormsModule,
-        MatButton,
-        MatIconButton,
-    ],
-    templateUrl: './excel.component.html',
-    styleUrl: './excel.component.scss'
+  selector: 'app-excel',
+  imports: [
+    MatIcon,
+    MatCard,
+    MatCardContent,
+    MatCardTitle,
+    MatFormField,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatDivider,
+    MatCardActions,
+    NgStyle,
+    NgIf,
+    FormsModule,
+    MatButton,
+    MatIconButton,
+    MatProgressSpinner,
+  ],
+  templateUrl: './excel.component.html',
+  styleUrl: './excel.component.scss',
 })
-export class ExcelComponent implements OnInit, OnDestroy {
+export class ExcelComponent implements OnInit {
   public responseMessage!: ResponseMessageDTO;
   public fileToUpload!: any;
   public progress = 0;
   public displayFileName!: FormControl;
-
   @Input() excelService!: IExcelService;
+  @Input() fileName: string = 'db-excel';
+  private readonly ALLOWED_EXTENSIONS = ['.xlsx', '.xls'];
+  private readonly MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  public isLoading = false;
+  public loadingMessage = '';
 
   constructor() {
     this.ngOnInit();
   }
 
   ngOnInit(): void {
-    this.resetResponseMessage();
-    this.displayFileName = new FormControl('', Validators.required);
+    this.resetForm();
   }
 
-  ngOnDestroy() {}
-
-  resetResponseMessage() {
+  // Modificar el método resetResponseMessage para incluir el reset del formulario
+  resetForm() {
     this.responseMessage = {
       message: '',
       success: false,
     };
     this.progress = 0;
+    this.fileToUpload = null;
+    // Crear un nuevo FormControl sin validador required
+    this.displayFileName = new FormControl({ value: '', disabled: true });
   }
 
   downloadExcelFile() {
-    this.excelService
-      .downloadExcelFile()
-      .then((response: HttpResponse<Blob>) => {
-        console.log('response', response);
-        const contentDisposition = response.headers.get('content-disposition');
-        if (contentDisposition) {
-          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          const filenameMatches = filenameRegex.exec(contentDisposition);
-          const filename =
-            filenameMatches != null && filenameMatches[1]
-              ? filenameMatches[1].replace(/['"]/g, '')
-              : 'customers.xlsx';
+    this.responseMessage = {
+      message: 'Descargando archivo...',
+      success: true,
+    };
 
-          const contentType = response.headers.get('content-type');
-          const blob = response.body
-            ? new Blob([response.body], {
-                type: contentType ? contentType : undefined,
-              })
-            : null;
-          if (blob) {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
-          } else {
-            console.log('Response body is null');
-          }
-        } else {
-          // Handle the case when contentDisposition is null
-          console.log('Content-Disposition header is missing');
+    const downloadPromise = this.excelService.downloadExcelFile();
+    (downloadPromise instanceof Promise
+      ? downloadPromise
+      : lastValueFrom(downloadPromise)
+    )
+      .then((response: HttpResponse<Blob>) => {
+        const contentDisposition = response.headers.get('content-disposition');
+        const contentType = response.headers.get('content-type');
+
+        if (!response.body) {
+          throw new Error('El archivo está vacío');
         }
+
+        const filename = this.getFilenameFromResponse(contentDisposition);
+        const blob = new Blob([response.body], {
+          type: contentType ?? 'application/vnd.ms-excel',
+        });
+        this.downloadFile(blob, filename);
+
+        this.responseMessage = {
+          message: 'Archivo descargado exitosamente',
+          success: true,
+        };
+      })
+      .catch((error) => {
+        this.responseMessage = {
+          message: `Error al descargar el archivo: ${error.message || 'Error desconocido'}`,
+          success: false,
+        };
+        console.error('Error downloading file:', error);
       });
+  }
+
+  private getFilenameFromResponse(contentDisposition: string | null): string {
+    if (contentDisposition) {
+      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      const matches = filenameRegex.exec(contentDisposition);
+      if (matches?.[1]) {
+        return matches[1].replace(/['"]/g, '');
+      }
+    }
+    return `${this.fileName}.xlsx`;
+  }
+
+  private downloadFile(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 
   onFileChange(files: FileList | null) {
     if (files?.length) {
-      this.fileToUpload = files.item(0);
-      this.displayFileName?.setValue(this.fileToUpload.name);
-      this.resetResponseMessage();
+      const file = files.item(0);
+      if (file) {
+        // Validar extensión
+        const extension = file.name
+          .toLowerCase()
+          .slice(file.name.lastIndexOf('.'));
+        if (!this.ALLOWED_EXTENSIONS.includes(extension)) {
+          this.responseMessage = {
+            message: `Tipo de archivo no permitido. Use: ${this.ALLOWED_EXTENSIONS.join(', ')}`,
+            success: false,
+          };
+          return;
+        }
+
+        // Validar tamaño
+        if (file.size > this.MAX_FILE_SIZE) {
+          this.responseMessage = {
+            message: 'El archivo excede el tamaño máximo permitido (5MB)',
+            success: false,
+          };
+          return;
+        }
+
+        this.fileToUpload = file;
+        this.displayFileName?.setValue(this.fileToUpload.name);
+        // Limpiar solo el mensaje de respuesta
+        this.responseMessage = {
+          message: '',
+          success: false,
+        };
+      }
     }
   }
 
   uploadExcelFile() {
-    this.resetResponseMessage();
+    console.log('Iniciando carga de archivo...');
+    this.setLoading(true, 'Subiendo archivo...');
 
     if (!this.fileToUpload) {
+      console.log('No hay archivo seleccionado');
+      this.responseMessage = {
+        message: 'Por favor seleccione un archivo',
+        success: false,
+      };
+      this.setLoading(false);
       return;
     }
 
-    this.excelService
-      .uploadExcelFile(this.fileToUpload)
-      .then((res: any) => {
-        if (res.type === HttpEventType.UploadProgress) {
-          // Do something when upload progress updates
-          this.progress = Math.round((100 * res.loaded) / res.total);
-          console.log(`File upload is ${this.progress}% complete.`);
-        } else {
-          this.responseMessage = res as ResponseMessageDTO;
-          // Aquí puedes manejar la respuesta del backend, por ejemplo mostrar un mensaje de éxito al usuario
-          this.fileToUpload = undefined;
-          this.displayFileName?.setValue('');
-        }
+    const formData = new FormData();
+    formData.append('file', this.fileToUpload);
+
+    const uploadPromise = this.excelService.uploadExcelFile(formData);
+    (uploadPromise instanceof Promise
+      ? uploadPromise
+      : lastValueFrom(uploadPromise)
+    )
+      .then((response: any) => {
+        console.log('Respuesta del servidor:', response);
+        this.responseMessage = {
+          message: response.message || 'Archivo cargado exitosamente',
+          success: response.success,
+        };
+        this.fileToUpload = null;
+        this.displayFileName.setValue('');
+        this.progress = 100;
       })
       .catch((error) => {
+        console.error('Error detallado:', error);
         this.progress = 0;
-        this.responseMessage.message = `Error uploading file: ${error}`;
-        this.responseMessage.success = false;
-        console.error(error);
-        // Aquí puedes manejar el error en caso de que ocurra durante la carga del archivo
+        this.responseMessage = {
+          message: `Error al cargar el archivo: ${error.message || 'Error desconocido'}`,
+          success: false,
+        };
+      })
+      .finally(() => {
+        this.setLoading(false);
       });
+  }
+
+  private setLoading(loading: boolean, message: string = '') {
+    this.isLoading = loading;
+    this.loadingMessage = message;
   }
 }

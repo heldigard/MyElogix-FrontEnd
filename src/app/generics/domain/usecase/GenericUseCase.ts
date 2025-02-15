@@ -40,9 +40,9 @@ export abstract class GenericUseCase<
     return this.gateway.downloadExcelFile(options);
   }
   uploadExcelFile(
-    file: File,
+    formData: FormData,
     options?: { asPromise?: boolean },
   ): Observable<any> | Promise<any> {
-    return this.gateway.uploadExcelFile(file, options);
+    return this.gateway.uploadExcelFile(formData, options);
   }
 }

@@ -1,9 +1,9 @@
 <div class="order-stats" *ngIf="orderResponse">
   <div class="stat-item">
-    <span>Pendientes: {{ orderResponse.pendingCount }}</span>
-  </div>
-  <div class="stat-item">
-    <span>En Producción: {{ orderResponse.productionCount }}</span>
+    <span
+      >Pendientes:
+      {{ orderResponse.pendingCount + orderResponse.productionCount }}</span
+    >
   </div>
   <div class="stat-item">
     <span>Finalizados: {{ orderResponse.finishedCount }}</span>

@@ -42,12 +42,7 @@
             >
               <mat-icon>attach_file</mat-icon>
             </button>
-            <input
-              type="text"
-              readonly
-              matInput
-              [formControl]="displayFileName"
-            />
+            <input type="text" matInput [formControl]="displayFileName" />
             <input
               type="file"
               multiple
@@ -55,7 +50,6 @@
               #file_input
               (change)="onFileChange(file_input.files)"
             />
-            <mat-error>Seleccione un Archivo</mat-error>
           </mat-form-field>
           <br /><br />
         </mat-card-content>
@@ -67,7 +61,7 @@
             class="btn btn-success"
             mat-stroked-button
             color="primary"
-            [disabled]="displayFileName.invalid"
+            [disabled]="!fileToUpload"
             (click)="uploadExcelFile()"
           >
             Enviar
@@ -103,4 +97,8 @@
       </mat-form-field>
     </div>
   </div>
+</div>
+<div class="loading-overlay" *ngIf="isLoading">
+  <mat-spinner diameter="50"></mat-spinner>
+  <span>{{ loadingMessage }}</span>
 </div>

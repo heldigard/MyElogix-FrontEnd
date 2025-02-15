@@ -36,7 +36,7 @@ import { PestaniaLabelComponent } from '../../../../shared/components/pestania-l
   styleUrl: './customer-administration.component.scss',
   animations: [slideInAnimation],
 })
-export class CustomerAdministrationComponent implements OnInit, OnDestroy {
+export class CustomerAdministrationComponent {
   public clientsTitle!: string;
   public editClientTitle!: string;
   public editClientsExcelTitle!: string;
@@ -48,7 +48,7 @@ export class CustomerAdministrationComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatTabNav, { static: true }) navigation!: MatTabNav;
 
-  private route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
 
   protected readonly URL_ADMIN_CLIENTS_MAIN = URL_ADMIN_CLIENTS_MAIN;
   protected readonly URL_ADMIN_CLIENTS_EDIT = URL_ADMIN_CLIENTS_EDIT;
@@ -63,10 +63,6 @@ export class CustomerAdministrationComponent implements OnInit, OnDestroy {
     this.editClientsExcelIcon = 'excel-icon.png';
     this.animationState = 0;
   }
-
-  ngOnInit() {}
-
-  ngOnDestroy(): void {}
 
   onActivate($event: any) {
     this.animationState = this.route?.firstChild?.snapshot.data['routeIdx'];

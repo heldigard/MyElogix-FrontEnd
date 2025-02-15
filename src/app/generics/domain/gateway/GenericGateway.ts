@@ -26,7 +26,7 @@ export abstract class GenericGateway<
     asPromise?: boolean;
   }): Observable<HttpResponse<Blob>> | Promise<HttpResponse<Blob>>;
   abstract uploadExcelFile(
-    file: File,
+    formData: FormData,
     options?: {
       asPromise?: boolean;
     },

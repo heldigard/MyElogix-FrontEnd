@@ -1,6 +1,9 @@
 import { HttpResponse } from '@angular/common/http';
+import type { Observable } from 'rxjs';
 
 export interface IExcelService {
-  uploadExcelFile(fileToUpload: File): Promise<any>;
-  downloadExcelFile(): Promise<HttpResponse<Blob>>;
+  uploadExcelFile(formData: FormData): Observable<any> | Promise<any>;
+  downloadExcelFile():
+    | Observable<HttpResponse<Blob>>
+    | Promise<HttpResponse<Blob>>;
 }

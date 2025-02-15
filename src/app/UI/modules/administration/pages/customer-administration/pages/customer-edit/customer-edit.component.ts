@@ -29,6 +29,7 @@ import { DocumentTypeService } from '../../../../../../../customers/infrastructu
 import { MembershipService } from '../../../../../../../customers/infrastructure/services/membership.service';
 import { NeighborhoodService } from '../../../../../../../customers/infrastructure/services/neighborhood.service';
 import { NumbersOnlyDirective } from '../../../../directives/numbers-only.directive';
+import { effect } from '@angular/core';
 
 @Component({
   selector: 'app-customer-edit',
@@ -103,6 +104,15 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     this.filteredNeighborhoodList = [];
     this.isSaving = false;
     this.isDisableSave = false;
+
+    // Añadir effect para monitorear cambios en currentItem
+    effect(() => {
+      const currentCustomer = this.customerService.currentItem();
+      if (currentCustomer && this.customerForm) {
+        // Solo actualizar el formulario si hay datos y el form está inicializado
+        this.setFormFields(currentCustomer);
+      }
+    });
   }
 
   ngOnInit() {
@@ -135,10 +145,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.params['id'];
     if (id) {
       await this.customerService.setCurrentCustomerById(Number(id));
-      const currentCustomer = this.customerService.currentItem();
-      if (currentCustomer && currentCustomer.id !== -1) {
-        this.setFormFields(currentCustomer);
-      }
     }
   }
 
@@ -208,10 +214,9 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Usar patchValue para actualización en lote
     customerControl.patchValue(
       {
-        id: customer.id!,
+        id: customer.id ?? '',
         name: customer.name ?? '',
         email: customer.email ?? '',
         phone: customer.phone ?? '',
@@ -246,13 +251,14 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
     membershipControl.patchValue(
       {
-        id: membership.id,
+        id: membership.id ?? -1,
         name: membership.name ?? '',
         description: membership.description ?? '',
       },
       { emitEvent: false },
     );
   }
+
   private addBranchOfficeList(branchOfficeList: BranchOffice[]) {
     this.resetBranchOffices();
     branchOfficeList.forEach((branchOffice: BranchOffice) => {
@@ -470,23 +476,24 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
   private getCustomerFromData(): Customer {
     // Get base customer data
-    const currentCustomerValue = this.customerService.currentItem(); // Get the signal value
+    const customer = this.customerService.currentItem(); // Get the signal value
 
-    if (!currentCustomerValue) {
+    if (!customer) {
       throw new Error('No customer data available');
     }
 
     const customerData: Customer = {
-      id: currentCustomerValue.id,
-      name: this.customerForm.get('customer.name')?.value || '',
-      phone: this.customerForm.get('customer.phone')?.value || '',
-      email: this.customerForm.get('customer.email')?.value || '',
+      id: customer.id,
+      name: this.customerForm.get('customer.name')?.value,
+      phone: this.customerForm.get('customer.phone')?.value,
+      email: this.customerForm.get('customer.email')?.value,
       documentNumber: this.customerForm.get('customer.documentNumber')?.value,
 
       // Document Type
       documentType: {
         id: this.customerForm.get('documentType.id')?.value || -1,
         name: this.customerForm.get('documentType.name')?.value || '',
+        version: customer.documentType?.version ?? 0,
       },
 
       // Membership
@@ -495,13 +502,14 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         name: this.customerForm.get('membership.name')?.value || '',
         description:
           this.customerForm.get('membership.description')?.value || '',
+        version: customer.membership?.version ?? 0,
       },
 
       // Map branch offices
       branchOfficeList:
         this.branchOffices()?.controls.map((branchOffice) => ({
           id: branchOffice.get('id')?.value,
-          customerId: currentCustomerValue.id,
+          customerId: customer.id,
           address: branchOffice.get('address')?.value || '',
 
           // Branch office relationships
@@ -534,10 +542,11 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         })) || [],
 
       // Additional base fields
-      createdAt: currentCustomerValue.createdAt,
-      updatedAt: new Date(),
-      isDeleted: currentCustomerValue.isDeleted || false,
-      hits: currentCustomerValue.hits ?? 0,
+      createdAt: customer.createdAt,
+      updatedAt: customer.updatedAt,
+      isDeleted: customer.isDeleted || false,
+      hits: customer.hits ?? 0,
+      version: customer.version ?? 0,
     };
 
     // Remove any invalid relationships

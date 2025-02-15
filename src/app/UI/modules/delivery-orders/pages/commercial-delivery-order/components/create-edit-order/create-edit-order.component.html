@@ -15,6 +15,8 @@
 
   <mat-divider></mat-divider>
 
+  <app-order-stats [orderResponse]="state()!"></app-order-stats>
+
   <app-product-orders-info
     [screenType]="this.screenType"
     (lastFieldEnter)="focusLiteSearch()"

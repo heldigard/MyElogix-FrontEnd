@@ -56,18 +56,25 @@ export class CustomerService extends GenericNamedService<
     let formBuilder: FormBuilder = new FormBuilder();
     return formBuilder.group({
       customer: formBuilder.group({
+        id: [''],
         documentNumber: [-1],
         name: ['', [Validators.required, Validators.minLength(3)]],
         email: [''],
         phone: ['', [ValidatePhone]],
+        hits: [0],
+        isActive: [true],
+        version: [0],
       }),
       documentType: formBuilder.group({
         id: [-1, [ValidateIndexSelected]],
         name: [''],
+        version: [0],
       }),
       membership: formBuilder.group({
+        id: [-1],
         name: [''],
         description: [''],
+        version: [0],
       }),
       branchOfficeList: formBuilder.array([]),
     });

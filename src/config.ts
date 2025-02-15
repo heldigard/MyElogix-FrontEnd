@@ -29,10 +29,24 @@ import { ProductOrderGatewayImpl } from './app/product-order/infrastructure/Prod
 import { CoreModule } from './app/UI/core/core.module';
 import { LoaderModule } from './app/UI/modules/loader/loader.module';
 import { environment } from './environments/environment';
-import { MetricUnitGateway } from './app/delivery-orders/domain/models/gateways/MetricUnitGateway'
-import { MetricUnitGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/metric-unit/MetricUnitGatewayImpl.service'
-import { MeasureDetailGateway } from './app/delivery-orders/domain/models/gateways/MeasureDetailGateway'
-import { MeasureDetailGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/measure-detail/MeasureDetailGatewayImpl.service'
+import { MetricUnitGateway } from './app/delivery-orders/domain/models/gateways/MetricUnitGateway';
+import { MetricUnitGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/metric-unit/MetricUnitGatewayImpl.service';
+import { MeasureDetailGateway } from './app/delivery-orders/domain/models/gateways/MeasureDetailGateway';
+import { MeasureDetailGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/measure-detail/MeasureDetailGatewayImpl.service';
+import { CityGateway } from './app/customers/domain/models/gateways/CityGateway';
+import { CityGatewayImpl } from './app/customers/infrastructure/driven_adapters/city/CityGatewayImpl.service';
+import { NeighborhoodGateway } from './app/customers/domain/models/gateways/NeighborhoodGateway';
+import { NeighborhoodGatewayImpl } from './app/customers/infrastructure/driven_adapters/neighborhood/NeighborhoodGatewayImpl.service';
+import { MembershipGateway } from './app/customers/domain/models/gateways/MembershipGateway';
+import { MembershipGatewayImpl } from './app/customers/infrastructure/driven_adapters/membership/MembershipGatewayImpl.service';
+import { DeliveryZoneGateway } from './app/customers/domain/models/gateways/DeliveryZoneGateway';
+import { DeliveryZoneGatewayImpl } from './app/customers/infrastructure/driven_adapters/delivery-zone/DeliveryZoneGatewayImpl.service';
+import { DocumentTypeGateway } from './app/customers/domain/models/gateways/DocumentTypeGateway';
+import { DocumentTypeGatewayImpl } from './app/customers/infrastructure/driven_adapters/document-type/DocumentTypeGatewayImpl.service';
+import { ProductTypeGateway } from './app/delivery-orders/domain/models/gateways/ProductTypeGateway';
+import { ProductTypeGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/product-type/ProductTypeGatewayImpl.service';
+import { ProductCategoryGateway } from './app/delivery-orders/domain/models/gateways/ProductCategoryGateway';
+import { ProductCategoryGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/product-category/ProductCategoryGatewayImpl.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
@@ -73,12 +87,40 @@ export const appConfig: ApplicationConfig = {
       useClass: StatusGatewayImpl,
     },
     {
+      provide: CityGateway,
+      useClass: CityGatewayImpl,
+    },
+    {
+      provide: NeighborhoodGateway,
+      useClass: NeighborhoodGatewayImpl,
+    },
+    {
+      provide: MembershipGateway,
+      useClass: MembershipGatewayImpl,
+    },
+    {
+      provide: DeliveryZoneGateway,
+      useClass: DeliveryZoneGatewayImpl,
+    },
+    {
+      provide: DocumentTypeGateway,
+      useClass: DocumentTypeGatewayImpl,
+    },
+    {
       provide: CustomerGateway,
       useClass: CustomerGatewayImpl,
     },
     {
       provide: CustomerBasicGateway,
       useClass: CustomerBasicGatewayImpl,
+    },
+    {
+      provide: ProductTypeGateway,
+      useClass: ProductTypeGatewayImpl,
+    },
+    {
+      provide: ProductCategoryGateway,
+      useClass: ProductCategoryGatewayImpl,
     },
     {
       provide: ProductGateway,

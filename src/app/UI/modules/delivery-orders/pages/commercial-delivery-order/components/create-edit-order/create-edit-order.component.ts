@@ -18,6 +18,7 @@ import { OrderCustomerInfoComponent } from '../../../../components/order-custome
 import { OrderGeneralObservationsComponent } from '../../../../components/order-general-observations/order-general-observations.component';
 import { ProductOrdersInfoComponent } from '../../../../components/product-orders-info/product-orders-info.component';
 import { DeliveryOrderService } from '../../../../../../../delivery_order/infrastructure/delivery-order/delivery-order.service';
+import { OrderStatsComponent } from '../../../../components/order-stats/order-stats.component';
 
 @Component({
   selector: 'app-create-edit-order',
@@ -32,13 +33,14 @@ import { DeliveryOrderService } from '../../../../../../../delivery_order/infras
     ProductSearchComponent,
     AuditInfoComponent,
     ProductOrdersInfoComponent,
+    OrderStatsComponent,
   ],
 })
 export class CreateEditOrderComponent {
   @Input() screenType!: string;
   @Input() title!: string;
 
-  private readonly state = computed(() => this.orderService.getState()());
+  protected readonly state = computed(() => this.orderService.getState()());
   protected readonly order = computed(() => this.state().order);
   protected readonly isOrderFinished = computed(() => {
     const order = this.order();

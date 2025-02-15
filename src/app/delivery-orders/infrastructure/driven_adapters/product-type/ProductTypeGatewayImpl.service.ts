@@ -2,9 +2,8 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GenericNamedGatewayImpl } from '../../../../generics/insfrastructure/GenericNamedGatewayImpl';
-import { BooleanDTO } from '../../../../shared/domain/models/BooleanDTO';
-import { ProductType } from '../../../domain/models/ProductType';
-import { ProductTypeGateway } from '../../../domain/models/gateways/ProductTypeGateway';
+import type { ProductType } from '../../../domain/models/ProductType';
+import type { ProductTypeGateway } from '../../../domain/models/gateways/ProductTypeGateway';
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +27,10 @@ export class ProductTypeGatewayImpl
     });
   }
 
-  updateIsMeasurable(booleanDTO: BooleanDTO): Observable<number> {
+  updateIsMeasurable(measurable: boolean): Observable<number> {
     const endpoint = this.localEndpoint + '/update/isMeasurable';
 
-    return this.httpClient.put<number>(this.apiURL + endpoint, booleanDTO);
+    return this.httpClient.put<number>(this.apiURL + endpoint, measurable);
   }
 
   findByCategory(

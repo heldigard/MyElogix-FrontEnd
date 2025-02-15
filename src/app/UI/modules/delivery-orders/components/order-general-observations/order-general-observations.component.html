@@ -16,7 +16,13 @@
           cdkAutosizeMinRows="1"
           cdkAutosizeMaxRows="5"
           (input)="onObservationInput($event)"
+          [value]="processedObservations()"
         ></textarea>
+        <mat-error
+          *ngIf="form.get('generalObservations')?.errors?.['maxlength']"
+        >
+          Máximo 255 caracteres
+        </mat-error>
       </mat-form-field>
     </div>
   </div>

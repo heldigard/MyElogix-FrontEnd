@@ -1,19 +1,22 @@
 import { HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   catchError,
+  from,
   lastValueFrom,
   map,
   Observable,
   of,
   switchMap,
 } from 'rxjs';
-import { GenericStatus } from '../../../../generics/domain/model/GenericStatus';
-import { ApiResponse } from '../../../../generics/dto/ApiResponse';
+import type { GenericStatus } from '../../../../generics/domain/model/GenericStatus';
+import type { ApiResponse } from '../../../../generics/dto/ApiResponse';
 import { GenericStatusGatewayImpl } from '../../../../generics/insfrastructure/GenericStatusGatewayImpl';
-import { Hits } from '../../../../shared/domain/models/Hits';
-import { Product } from '../../../domain/models/Product';
-import { ProductGateway } from '../../../domain/models/gateways/ProductGateway';
+import type { Hits } from '../../../../shared/domain/models/Hits';
+import type { Product } from '../../../domain/models/Product';
+import type { ProductGateway } from '../../../domain/models/gateways/ProductGateway';
+import { ProductTypeService } from '../../services/product-type.service';
+import { ProductCategoryService } from '../../services/product-category.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +25,8 @@ export class ProductGatewayImpl
   extends GenericStatusGatewayImpl<GenericStatus>
   implements ProductGateway
 {
+  private readonly typeService = inject(ProductTypeService);
+  private readonly categoryService = inject(ProductCategoryService);
   constructor() {
     super('/product');
   }
@@ -87,59 +92,32 @@ export class ProductGatewayImpl
     return this.httpClient.put<number>(this.apiURL + endpoint, hits);
   }
 
-  override uploadExcelFile(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file, file.name);
-
-    return this.uploadProductTypeExcelFile(formData).pipe(
-      catchError((err) => {
-        console.error('Error en la petición:', err);
-        return of(null); // Manejar el error de forma adecuada
-      }),
-      switchMap(() => this.uploadProductCategoryExcelFile(formData)), // Iniciar la siguiente petición
-      switchMap(() => this.uploadProductExcelFile(formData)), // Iniciar la última petición
+  override uploadExcelFile(formData: FormData): Promise<any> {
+    return lastValueFrom(
+      // Start with the type service upload
+      from(this.typeService.uploadExcelFile(formData)).pipe(
+        // Handle type service errors but continue the chain
+        catchError((err) => {
+          console.error('Error uploading product types:', err);
+          return of(null);
+        }),
+        // Then upload to category service
+        switchMap(() => this.categoryService.uploadExcelFile(formData)),
+        catchError((err) => {
+          console.error('Error uploading product categories:', err);
+          return of(null);
+        }),
+        // Finally upload to product service
+        switchMap(() => this.uploadProductExcelFile(formData)),
+        catchError((err) => {
+          console.error('Error uploading products:', err);
+          throw err; // Rethrow the last error since it's the final step
+        }),
+      ),
     );
   }
 
-  uploadProductTypeExcelFile(file: FormData): Observable<any> {
-    return this.httpClient
-      .post<any>(`${this.apiURL}/product-type/excel/upload`, file, {
-        reportProgress: true,
-        responseType: 'json',
-      })
-      .pipe(
-        catchError((err) => {
-          console.error('Error en la petición:', err);
-          return of(null); // Manejar el error de forma adecuada
-        }),
-      );
-  }
-
-  uploadProductCategoryExcelFile(file: FormData): Observable<any> {
-    return this.httpClient
-      .post<any>(`${this.apiURL}/product-category/excel/upload`, file, {
-        reportProgress: true,
-        responseType: 'json',
-      })
-      .pipe(
-        catchError((err) => {
-          console.error('Error en la petición:', err);
-          return of(null); // Manejar el error de forma adecuada
-        }),
-      );
-  }
-
-  uploadProductExcelFile(file: FormData): Observable<any> {
-    return this.httpClient
-      .post<any>(`${this.apiURL}${this.localEndpoint}/excel/upload`, file, {
-        reportProgress: true,
-        responseType: 'json',
-      })
-      .pipe(
-        catchError((err) => {
-          console.error('Error en la petición:', err);
-          return of(null); // Manejar el error de forma adecuada
-        }),
-      );
+  uploadProductExcelFile(formData: FormData): Observable<any> | Promise<any> {
+    return super.uploadExcelFile(formData, { asPromise: true }) as Promise<any>;
   }
 }

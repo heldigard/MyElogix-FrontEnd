@@ -1,5 +1,5 @@
 <!-- 1. Main wrapper with loading state -->
-<ng-container *ngIf="customerService.currentItem()! as customer">
+<ng-container *ngIf="customerService.currentItem()">
   <!-- Loading spinner -->
   <div
     *ngIf="customerService.isLoading()"

@@ -60,9 +60,9 @@ export abstract class GenericService<
     }
   }
 
-  public async uploadExcelFile(file: File): Promise<any> {
+  public async uploadExcelFile(formData: FormData): Promise<any> {
     try {
-      return await this.useCase.uploadExcelFile(file);
+      return await this.useCase.uploadExcelFile(formData);
     } catch (error) {
       console.error('Error uploading excel file:', error);
       throw error;

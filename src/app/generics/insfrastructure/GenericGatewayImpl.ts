@@ -92,13 +92,10 @@ export abstract class GenericGatewayImpl<T extends GenericEntity>
   }
 
   uploadExcelFile(
-    file: File,
+    formData: FormData,
     options?: { asPromise?: boolean },
   ): Observable<any> | Promise<any> {
     const endpoint = this.localEndpoint + '/excel/upload';
-    const formData = new FormData();
-    formData.append('file', file, file.name);
-
     const request = this.httpClient.post<any>(
       this.apiURL + endpoint,
       formData,
