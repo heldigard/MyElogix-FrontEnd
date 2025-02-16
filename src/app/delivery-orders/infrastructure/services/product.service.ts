@@ -96,10 +96,6 @@ export class ProductService extends GenericStatusService<
         direction: 'ASC',
         property: 'reference',
       },
-      {
-        direction: 'ASC',
-        property: 'description',
-      },
     ];
   }
 }

@@ -10,5 +10,4 @@ import { ExcelComponent } from '../../../../components/excel/excel.component';
 })
 export class ProductExcelComponent {
   public productService: ProductService = inject(ProductService);
-
 }

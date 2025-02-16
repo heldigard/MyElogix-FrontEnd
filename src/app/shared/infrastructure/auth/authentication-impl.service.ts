@@ -51,7 +51,8 @@ export class AuthenticationImplService {
   // Inicializar signals con valores por defecto
   private readonly isLoggedIn = signal<boolean>(false);
   private readonly currentUser = signal<UserDTO>(this.getBlank());
-  private readonly refreshTokenInProgress = signal<boolean>(false);
+  // Make refreshTokenInProgress accessible
+  public readonly refreshTokenInProgress = signal<boolean>(false);
   public readonly refreshTokenSignal = signal<AuthenticationResponse | null>(
     null,
   );
@@ -141,6 +142,7 @@ export class AuthenticationImplService {
   }
 
   // Modify handle401Error to handle token refresh
+
   handle401Error(
     request: HttpRequest<any>,
     next: HttpHandler,
@@ -151,32 +153,47 @@ export class AuthenticationImplService {
 
       const refreshToken = this.cookieService.get('refreshToken');
 
-      if (refreshToken) {
-        return this.refresh({ refreshToken }).pipe(
-          switchMap((response: AuthenticationResponse) => {
-            this.refreshTokenInProgress.set(false);
-            this.login(response);
-            this.refreshTokenSignal.set(response);
-            return next.handle(this.addToken(request, response.accessToken));
-          }),
-          catchError((error) => {
-            this.refreshTokenInProgress.set(false);
-            this.logout();
-            return throwError(() => error);
-          }),
-        );
+      if (!refreshToken) {
+        this.refreshTokenInProgress.set(false);
+        this.logout();
+        return throwError(() => new Error('No refresh token available'));
       }
+
+      return this.refresh({ refreshToken }).pipe(
+        switchMap((response: AuthenticationResponse) => {
+          this.refreshTokenInProgress.set(false);
+          this.refreshTokenSignal.set(response);
+          this.login(response);
+          return next.handle(this.addToken(request, response.accessToken));
+        }),
+        catchError((error) => {
+          this.refreshTokenInProgress.set(false);
+          this.refreshTokenSignal.set(null);
+          this.logout();
+          return throwError(() => new Error('Token refresh failed'));
+        }),
+      );
     }
 
-    // Usar toObservable en lugar de of
-    return toObservable(this.refreshTokenSignal).pipe(
-      switchMap((token) => {
-        if (token) {
-          return next.handle(this.addToken(request, token.accessToken));
+    // Wait for the ongoing refresh to complete
+    return new Observable<HttpEvent<any>>((subscriber) => {
+      const intervalId = setInterval(() => {
+        if (!this.refreshTokenInProgress()) {
+          clearInterval(intervalId);
+
+          const token = this.cookieService.get('accessToken');
+          if (token) {
+            next.handle(this.addToken(request, token)).subscribe(subscriber);
+          } else {
+            this.logout();
+            subscriber.error(new Error('Authentication required'));
+          }
         }
-        return throwError(() => 'No refresh token available');
-      }),
-    );
+      }, 100);
+
+      // Cleanup
+      return () => clearInterval(intervalId);
+    });
   }
 
   // Helper method to add token to request

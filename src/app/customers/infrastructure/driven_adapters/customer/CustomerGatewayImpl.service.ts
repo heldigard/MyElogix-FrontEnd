@@ -172,4 +172,8 @@ export class CustomerGatewayImpl
 
     return options?.asPromise ? lastValueFrom(request) : request;
   }
+
+  override uploadExcelFile(formData: FormData): Observable<any> | Promise<any> {
+    return super.uploadExcelFile(formData, { asPromise: true }) as Promise<any>;
+  }
 }

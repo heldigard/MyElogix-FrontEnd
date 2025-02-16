@@ -2,15 +2,12 @@ import { CanActivateFn } from '@angular/router';
 import { AuthenticationImplService } from '../../../../shared/infrastructure/auth/authentication-impl.service';
 import { inject } from '@angular/core';
 import { ERole } from '../../../../users/domain/models/ERole';
-import { SharedService } from '../../../shared/services/shared.service';
 
 export const hasRoleGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthenticationImplService);
-  const sharedService = inject(SharedService);
 
   // Usar el computed signal directamente
   const user = authService.getCurrentUser();
-  sharedService.checkReady();
 
   if (!user?.roles || !route.data['roles']) {
     authService.navigateToLogin();
