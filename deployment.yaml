@@ -28,30 +28,35 @@ spec:
           image: $DOCKER_IMAGE_NAME
           imagePullPolicy: Always
           env:
-            - name: API_URL
+            - name: CONFIGURATION
               valueFrom:
                 configMapKeyRef:
-                  name: env-frontend
-                  key: API_URL
+                  name: app-env
+                  key: CONFIGURATION
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: env-backend
+                  name: app-env
                   key: TZ
-            - name: JWT_HEADER
+            - name: API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: env-backend
-                  key: JWT_HEADER
-            - name: JWT_PREFIX
+                  name: app-env
+                  key: API_URL
+            - name: JWT_EXPIRATION
               valueFrom:
                 configMapKeyRef:
-                  name: env-backend
-                  key: JWT_PREFIX
+                  name: app-env
+                  key: JWT_EXPIRATION
+            - name: JWT_REFRESH_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  name: app-env
+                  key: JWT_REFRESH_EXPIRATION
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: db-credentials
+                  name: app-credentials
                   key: JWT_SECRET
           resources:
             requests:

@@ -6,14 +6,14 @@ import { IExcelService } from '../../../../../shared/domain/models/auth/IExcelSe
   providedIn: 'root',
 })
 export class ProductAdministrationService implements IExcelService {
-  private _productService: ProductService = inject(ProductService);
+  private readonly productService: ProductService = inject(ProductService);
 
   constructor() {}
 
   public downloadExcelFile(): Promise<HttpResponse<Blob>> {
-    return this._productService.downloadExcelFile();
+    return this.productService.downloadExcelFile();
   }
-  public uploadExcelFile(file: File): Promise<any> {
-    return this._productService.uploadExcelFile(file);
+  public uploadExcelFile(formData: FormData): Promise<any> {
+    return this.productService.uploadExcelFile(formData);
   }
 }

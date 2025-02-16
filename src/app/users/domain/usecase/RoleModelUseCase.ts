@@ -4,6 +4,7 @@ import { GenericUseCase } from '../../../generics/domain/usecase/GenericUseCase'
 import { ERole } from '../models/ERole';
 import { RoleModel } from '../models/RoleModel';
 import { RoleModelGateway } from '../models/gateways/RoleModelGateway';
+import type { ApiResponse } from '../../../generics/dto/ApiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +17,17 @@ export class RoleModelUseCase extends GenericUseCase<
     super(gateway);
   }
 
-  deleteByName(name: ERole): Observable<boolean> {
+  deleteByName(
+    name: ERole,
+    options?: { includeDeleted?: boolean; asPromise?: boolean },
+  ): Observable<ApiResponse<RoleModel>> | Promise<ApiResponse<RoleModel>> {
     return this.gateway.deleteByName(name);
   }
 
-  findByName(name: ERole): Observable<RoleModel> {
+  findByName(
+    name: ERole,
+    options?: { includeDeleted?: boolean; asPromise?: boolean },
+  ): Observable<ApiResponse<RoleModel>> | Promise<ApiResponse<RoleModel>> {
     return this.gateway.findByName(name);
   }
 }

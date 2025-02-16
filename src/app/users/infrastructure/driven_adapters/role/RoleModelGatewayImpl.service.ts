@@ -1,119 +1,83 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import { PaginationResponse } from '../../../../generics/dto/PaginationResponse';
-import { PaginationRequest } from '../../../../shared/domain/models/pagination/PaginationRequest';
-import { SortOrderDTO } from '../../../../shared/domain/models/pagination/Sort';
+import { HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { catchError, lastValueFrom, map, Observable } from 'rxjs';
 import { RoleModelGateway } from '../../../domain/models/gateways/RoleModelGateway';
 import { RoleModel } from '../../../domain/models/RoleModel';
+import type { ERole } from '../../../domain/models/ERole';
+import type { ApiResponse } from '../../../../generics/dto/ApiResponse';
+import { GenericGatewayImpl } from '../../../../generics/insfrastructure/GenericGatewayImpl';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RoleModelGatewayImpl implements RoleModelGateway {
-  private API_URL = environment.API_URL + environment.apiVersion;
-  private localEndpoint = '/role';
-
-  private httpClient: HttpClient = inject(HttpClient);
-
-  constructor() {}
-
-  add(role: RoleModel): Observable<RoleModel> {
-    const endpoint = this.localEndpoint + '/add';
-
-    return this.httpClient.post<RoleModel>(this.API_URL + endpoint, role);
+export class RoleModelGatewayImpl
+  extends GenericGatewayImpl<RoleModel>
+  implements RoleModelGateway
+{
+  constructor() {
+    super('/role');
   }
 
-  update(role: RoleModel): Observable<RoleModel> {
-    const endpoint = this.localEndpoint + '/update';
-
-    return this.httpClient.put<RoleModel>(this.API_URL + endpoint, role);
-  }
-
-  deleteById(id: number): Observable<boolean> {
-    const endpoint = this.localEndpoint + '/delete/id';
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('id', id);
-
-    return this.httpClient.delete<boolean>(this.API_URL + endpoint, {
-      params: queryParams,
-    });
-  }
-
-  deleteByName(name: string): Observable<boolean> {
-    const endpoint = this.localEndpoint + '/delete/name';
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('name', name);
-
-    return this.httpClient.delete<boolean>(this.API_URL + endpoint, {
-      params: queryParams,
-    });
-  }
-
-  findById(id: number, isDeleted?: boolean): Observable<RoleModel> {
-    const endpoint = this.localEndpoint + '/find/id';
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('id', id);
-    if (isDeleted) queryParams = queryParams.append('isDeleted', isDeleted);
-
-    return this.httpClient.get<RoleModel>(this.API_URL + endpoint, {
-      params: queryParams,
-    });
-  }
-
-  findByName(name: string, isDeleted?: boolean): Observable<RoleModel> {
-    const endpoint = this.localEndpoint + '/find/name';
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('name', name);
-    if (isDeleted) queryParams = queryParams.append('isDeleted', isDeleted);
-
-    return this.httpClient.get<RoleModel>(this.API_URL + endpoint, {
-      params: queryParams,
-    });
-  }
-
-  findAll(
-    sortOrders: SortOrderDTO[],
-    isDeleted?: boolean,
-  ): Observable<Array<RoleModel>> {
-    const endpoint = this.localEndpoint + '/find/all';
-
-    return this.httpClient.post<Array<RoleModel>>(this.API_URL + endpoint, {
-      sortOrders: sortOrders,
-      isDeleted: isDeleted,
-    });
-  }
-
-  findAllPagination(
-    paginationRequest: PaginationRequest,
-  ): Observable<PaginationResponse> {
-    const endpoint = this.localEndpoint + '/find/all/pagination';
-
-    return this.httpClient.post<PaginationResponse>(
-      this.API_URL + endpoint,
-      paginationRequest,
+  deleteByName(
+    name: ERole,
+    options?: { includeDeleted?: boolean; asPromise?: boolean },
+  ): Observable<ApiResponse<RoleModel>> | Promise<ApiResponse<RoleModel>> {
+    let queryParams = new HttpParams().set(
+      'includeDeleted',
+      options?.includeDeleted ?? false,
     );
+
+    const request = this.httpClient
+      .delete<ApiResponse<RoleModel>>(
+        `${this.API_URL}${this.localEndpoint}/name/${name}`,
+        {
+          params: queryParams,
+        },
+      )
+      .pipe(
+        map((response: ApiResponse<RoleModel>) => {
+          if (!response.success || !response.data) {
+            throw new Error(response.message);
+          }
+          return response;
+        }),
+        catchError((error) => {
+          console.error('Error in deleteByName:', error);
+          throw error;
+        }),
+      );
+
+    return options?.asPromise ? lastValueFrom(request) : request;
   }
 
-  //
-  // downloadExcelFile(): Observable<HttpResponse<Blob>> {
-  //   const endpoint = this.localEndpoint + '/excel/download';
-  //
-  //   return this.httpClient.get<Blob>(this.API_URL + endpoint, {
-  //     observe: 'response',
-  //     responseType: 'blob' as 'json',
-  //   });
-  // }
-  //
-  // uploadExcelFile(file: File): Observable<any> {
-  //   const endpoint = this.localEndpoint + '/excel/upload';
-  //   const formData = new FormData();
-  //   formData.append('file', file, file.name);
-  //
-  //   return this.httpClient.post<any>(this.API_URL + endpoint, formData, {
-  //     reportProgress: true,
-  //     responseType: 'json',
-  //   });
-  // }
+  findByName(
+    name: ERole,
+    options?: { includeDeleted?: boolean; asPromise?: boolean },
+  ): Observable<ApiResponse<RoleModel>> | Promise<ApiResponse<RoleModel>> {
+    let queryParams = new HttpParams()
+      .set('name', name)
+      .set('includeDeleted', options?.includeDeleted ?? false);
+
+    const request = this.httpClient
+      .get<ApiResponse<RoleModel>>(
+        `${this.API_URL}${this.localEndpoint}/search/name`,
+        {
+          params: queryParams,
+        },
+      )
+      .pipe(
+        map((response: ApiResponse<RoleModel>) => {
+          if (!response.success || !response.data) {
+            throw new Error(response.message);
+          }
+          return response;
+        }),
+        catchError((error) => {
+          console.error('Error in findByName:', error);
+          throw error;
+        }),
+      );
+
+    return options?.asPromise ? lastValueFrom(request) : request;
+  }
 }
