@@ -12,7 +12,7 @@ import { RoleModel } from '../../../domain/models/RoleModel';
   providedIn: 'root',
 })
 export class RoleModelGatewayImpl implements RoleModelGateway {
-  private apiURL = environment.apiURL + environment.apiVersion;
+  private API_URL = environment.API_URL + environment.apiVersion;
   private localEndpoint = '/role';
 
   private httpClient: HttpClient = inject(HttpClient);
@@ -22,13 +22,13 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
   add(role: RoleModel): Observable<RoleModel> {
     const endpoint = this.localEndpoint + '/add';
 
-    return this.httpClient.post<RoleModel>(this.apiURL + endpoint, role);
+    return this.httpClient.post<RoleModel>(this.API_URL + endpoint, role);
   }
 
   update(role: RoleModel): Observable<RoleModel> {
     const endpoint = this.localEndpoint + '/update';
 
-    return this.httpClient.put<RoleModel>(this.apiURL + endpoint, role);
+    return this.httpClient.put<RoleModel>(this.API_URL + endpoint, role);
   }
 
   deleteById(id: number): Observable<boolean> {
@@ -36,7 +36,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('id', id);
 
-    return this.httpClient.delete<boolean>(this.apiURL + endpoint, {
+    return this.httpClient.delete<boolean>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -46,7 +46,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('name', name);
 
-    return this.httpClient.delete<boolean>(this.apiURL + endpoint, {
+    return this.httpClient.delete<boolean>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -57,7 +57,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
     queryParams = queryParams.append('id', id);
     if (isDeleted) queryParams = queryParams.append('isDeleted', isDeleted);
 
-    return this.httpClient.get<RoleModel>(this.apiURL + endpoint, {
+    return this.httpClient.get<RoleModel>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -68,7 +68,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
     queryParams = queryParams.append('name', name);
     if (isDeleted) queryParams = queryParams.append('isDeleted', isDeleted);
 
-    return this.httpClient.get<RoleModel>(this.apiURL + endpoint, {
+    return this.httpClient.get<RoleModel>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -79,7 +79,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
   ): Observable<Array<RoleModel>> {
     const endpoint = this.localEndpoint + '/find/all';
 
-    return this.httpClient.post<Array<RoleModel>>(this.apiURL + endpoint, {
+    return this.httpClient.post<Array<RoleModel>>(this.API_URL + endpoint, {
       sortOrders: sortOrders,
       isDeleted: isDeleted,
     });
@@ -91,7 +91,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
     const endpoint = this.localEndpoint + '/find/all/pagination';
 
     return this.httpClient.post<PaginationResponse>(
-      this.apiURL + endpoint,
+      this.API_URL + endpoint,
       paginationRequest,
     );
   }
@@ -100,7 +100,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
   // downloadExcelFile(): Observable<HttpResponse<Blob>> {
   //   const endpoint = this.localEndpoint + '/excel/download';
   //
-  //   return this.httpClient.get<Blob>(this.apiURL + endpoint, {
+  //   return this.httpClient.get<Blob>(this.API_URL + endpoint, {
   //     observe: 'response',
   //     responseType: 'blob' as 'json',
   //   });
@@ -111,7 +111,7 @@ export class RoleModelGatewayImpl implements RoleModelGateway {
   //   const formData = new FormData();
   //   formData.append('file', file, file.name);
   //
-  //   return this.httpClient.post<any>(this.apiURL + endpoint, formData, {
+  //   return this.httpClient.post<any>(this.API_URL + endpoint, formData, {
   //     reportProgress: true,
   //     responseType: 'json',
   //   });

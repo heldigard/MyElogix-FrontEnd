@@ -1,5 +1,5 @@
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import {
   Component,
   computed,
@@ -49,6 +49,7 @@ import { type DeliveryOrder } from '../../../../../delivery_order/domain/model/D
     MatInputModule,
     TextFieldModule,
     NgClass,
+    NgIf,
   ],
 })
 export class OrderGeneralObservationsComponent implements OnInit, OnDestroy {

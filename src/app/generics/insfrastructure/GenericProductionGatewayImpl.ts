@@ -19,7 +19,7 @@ export abstract class GenericProductionGatewayImpl<T extends GenericProduction>
     const request = this.httpClient
       .put<
         ApiResponse<T>
-      >(`${this.apiURL}${this.localEndpoint}/status/advance/${id}`, null)
+      >(`${this.API_URL}${this.localEndpoint}/status/advance/${id}`, null)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success || !response.data) {
@@ -43,7 +43,7 @@ export abstract class GenericProductionGatewayImpl<T extends GenericProduction>
     const request = this.httpClient
       .put<
         ApiResponse<T>
-      >(`${this.apiURL}${this.localEndpoint}/status/advance/batch`, idList)
+      >(`${this.API_URL}${this.localEndpoint}/status/advance/batch`, idList)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success || !response.data) {
@@ -67,7 +67,7 @@ export abstract class GenericProductionGatewayImpl<T extends GenericProduction>
     const request = this.httpClient
       .put<
         ApiResponse<T>
-      >(`${this.apiURL}${this.localEndpoint}/${id}/status/cancelled`, null)
+      >(`${this.API_URL}${this.localEndpoint}/${id}/status/cancelled`, null)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success || !response.data) {
@@ -91,7 +91,7 @@ export abstract class GenericProductionGatewayImpl<T extends GenericProduction>
     const request = this.httpClient
       .put<
         ApiResponse<T>
-      >(`${this.apiURL}${this.localEndpoint}/${id}/status/paused`, null)
+      >(`${this.API_URL}${this.localEndpoint}/${id}/status/paused`, null)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success || !response.data) {

@@ -28,7 +28,7 @@ export class CustomerBasicGatewayImpl
 
     const request = this.httpClient
       .get<ApiResponse<CustomerBasic>>(
-        `${this.apiURL}${this.localEndpoint}/find/email`,
+        `${this.API_URL}${this.localEndpoint}/find/email`,
         {
           params: queryParams,
         },
@@ -61,7 +61,7 @@ export class CustomerBasicGatewayImpl
 
     const request = this.httpClient
       .get<ApiResponse<CustomerBasic>>(
-        `${this.apiURL}${this.localEndpoint}/find/documentNumber`,
+        `${this.API_URL}${this.localEndpoint}/find/documentNumber`,
         {
           params: queryParams,
         },

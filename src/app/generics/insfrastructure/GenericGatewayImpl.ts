@@ -18,7 +18,7 @@ export abstract class GenericGatewayImpl<T extends GenericEntity>
     options?: { asPromise?: boolean },
   ): Observable<ApiResponse<T>> | Promise<ApiResponse<T>> {
     const request = this.httpClient
-      .post<ApiResponse<T>>(`${this.apiURL}${this.localEndpoint}`, data)
+      .post<ApiResponse<T>>(`${this.API_URL}${this.localEndpoint}`, data)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success || !response.data) {
@@ -40,7 +40,7 @@ export abstract class GenericGatewayImpl<T extends GenericEntity>
     options?: { asPromise?: boolean },
   ): Observable<ApiResponse<T>> | Promise<ApiResponse<T>> {
     const request = this.httpClient
-      .put<ApiResponse<T>>(`${this.apiURL}${this.localEndpoint}`, data)
+      .put<ApiResponse<T>>(`${this.API_URL}${this.localEndpoint}`, data)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success || !response.data) {
@@ -62,7 +62,7 @@ export abstract class GenericGatewayImpl<T extends GenericEntity>
     options?: { asPromise?: boolean },
   ): Observable<ApiResponse<T>> | Promise<ApiResponse<T>> {
     const request = this.httpClient
-      .delete<ApiResponse<T>>(`${this.apiURL}${this.localEndpoint}/${id}`)
+      .delete<ApiResponse<T>>(`${this.API_URL}${this.localEndpoint}/${id}`)
       .pipe(
         map((response: ApiResponse<T>) => {
           if (!response.success) {
@@ -83,7 +83,7 @@ export abstract class GenericGatewayImpl<T extends GenericEntity>
     asPromise?: boolean;
   }): Observable<HttpResponse<Blob>> | Promise<HttpResponse<Blob>> {
     const endpoint = this.localEndpoint + '/excel/download';
-    const request = this.httpClient.get<Blob>(this.apiURL + endpoint, {
+    const request = this.httpClient.get<Blob>(this.API_URL + endpoint, {
       observe: 'response',
       responseType: 'blob' as 'json',
     });
@@ -97,7 +97,7 @@ export abstract class GenericGatewayImpl<T extends GenericEntity>
   ): Observable<any> | Promise<any> {
     const endpoint = this.localEndpoint + '/excel/upload';
     const request = this.httpClient.post<any>(
-      this.apiURL + endpoint,
+      this.API_URL + endpoint,
       formData,
       {
         reportProgress: true,

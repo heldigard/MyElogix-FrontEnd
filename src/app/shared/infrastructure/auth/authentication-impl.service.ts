@@ -13,8 +13,6 @@ import {
   ROLES_DISPATCH,
   ROLES_MANAGER,
   ROLES_PRODUCTION,
-  TOKEN_EXPIRATION_TIME,
-  TOKEN_REFRESH_EXPIRATION_TIME,
   URL_AUTH,
   URL_AUTH_LOGIN,
 } from '@globals';
@@ -33,14 +31,13 @@ import { AuthenticationResponse } from '../../domain/models/auth/AuthenticationR
 import { LogoutRequest } from '../../domain/models/auth/LogoutRequest';
 import { RefreshRequest } from '../../domain/models/auth/RefreshRequest';
 import { UserDTO } from '../../domain/models/auth/UserDTO';
-import { toObservable } from '@angular/core/rxjs-interop';
 import type { DecodedToken } from '../../domain/models/auth/DecodedToken';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationImplService {
-  private readonly apiURL = environment.apiURL + environment.apiVersion;
+  private readonly API_URL = environment.API_URL + environment.apiVersion;
   private readonly localEndpoint = '/auth';
 
   private readonly httpClient: HttpClient = inject(HttpClient);
@@ -71,7 +68,7 @@ export class AuthenticationImplService {
   ): Observable<AuthenticationResponse> {
     const endpoint = this.localEndpoint + '/authenticate';
     return this.httpClient.post<AuthenticationResponse>(
-      this.apiURL + endpoint,
+      this.API_URL + endpoint,
       authenticationRequest,
     );
   }
@@ -79,7 +76,7 @@ export class AuthenticationImplService {
   refresh(refreshRequest: RefreshRequest): Observable<AuthenticationResponse> {
     const endpoint = this.localEndpoint + '/refresh';
     return this.httpClient.post<AuthenticationResponse>(
-      this.apiURL + endpoint,
+      this.API_URL + endpoint,
       refreshRequest,
     );
   }
@@ -130,7 +127,7 @@ export class AuthenticationImplService {
     };
 
     return this.httpClient
-      .post<boolean>(this.apiURL + endpoint, logoutRequest)
+      .post<boolean>(this.API_URL + endpoint, logoutRequest)
       .pipe(
         catchError((error) => {
           console.error('Logout error:', error);
@@ -233,10 +230,11 @@ export class AuthenticationImplService {
   }
 
   public setCookie(name: string, value: string) {
-    const expirationTime =
+    const expirationTime = Number(
       name === 'refreshToken'
-        ? TOKEN_REFRESH_EXPIRATION_TIME
-        : TOKEN_EXPIRATION_TIME;
+        ? environment.JWT_REFRESH_EXPIRATION
+        : environment.JWT_EXPIRATION
+    );
 
     const options: CookieOptions = {
       path: '/',

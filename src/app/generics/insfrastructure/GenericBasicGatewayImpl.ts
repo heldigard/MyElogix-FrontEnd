@@ -13,7 +13,7 @@ export abstract class GenericBasicGatewayImpl<T extends GenericBasicEntity>
   implements GenericBasicGateway<T>
 {
   protected httpClient: HttpClient = inject(HttpClient);
-  protected apiURL = environment.apiURL + environment.apiVersion;
+  protected API_URL = environment.API_URL + environment.apiVersion;
   constructor(protected readonly localEndpoint: string) {}
 
   findById(
@@ -30,7 +30,7 @@ export abstract class GenericBasicGatewayImpl<T extends GenericBasicEntity>
     }
 
     const request = this.httpClient
-      .get<ApiResponse<T>>(`${this.apiURL}${this.localEndpoint}/${id}`, {
+      .get<ApiResponse<T>>(`${this.API_URL}${this.localEndpoint}/${id}`, {
         params: queryParams,
       })
       .pipe(
@@ -84,7 +84,7 @@ export abstract class GenericBasicGatewayImpl<T extends GenericBasicEntity>
     );
 
     const request = this.httpClient
-      .get<ApiResponse<T>>(this.apiURL + endpoint, {
+      .get<ApiResponse<T>>(this.API_URL + endpoint, {
         params: queryParams,
       })
       .pipe(
@@ -126,7 +126,7 @@ export abstract class GenericBasicGatewayImpl<T extends GenericBasicEntity>
     );
 
     const request = this.httpClient
-      .get<ApiResponse<T>>(this.apiURL + endpoint, {
+      .get<ApiResponse<T>>(this.API_URL + endpoint, {
         params: queryParams,
       })
       .pipe(
@@ -168,7 +168,7 @@ export abstract class GenericBasicGatewayImpl<T extends GenericBasicEntity>
     }
 
     const request = this.httpClient
-      .get<PaginationResponse<T>>(this.apiURL + endpoint, {
+      .get<PaginationResponse<T>>(this.API_URL + endpoint, {
         params: queryParams,
       })
       .pipe(

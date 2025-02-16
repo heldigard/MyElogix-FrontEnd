@@ -10,14 +10,13 @@ export class CryptoService {
   constructor() {}
 
   public encrypt(txt: string): string {
-    return CryptoJS.AES.encrypt(txt, environment.TOKEN_SECRET_KEY).toString();
+    return CryptoJS.AES.encrypt(txt, environment.JWT_SECRET).toString();
   }
 
   public decrypt(txtToDecrypt: string) {
-    return CryptoJS.AES.decrypt(
-      txtToDecrypt,
-      environment.TOKEN_SECRET_KEY,
-    ).toString(CryptoJS.enc.Utf8);
+    return CryptoJS.AES.decrypt(txtToDecrypt, environment.JWT_SECRET).toString(
+      CryptoJS.enc.Utf8,
+    );
   }
 
   decodeToken(token: string): any {

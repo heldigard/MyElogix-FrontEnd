@@ -29,7 +29,7 @@ export class CustomerGatewayImpl
     const request = this.httpClient
       .delete<
         ApiResponse<Customer>
-      >(`${this.apiURL}${this.localEndpoint}/delete/documentNumber`, { params: queryParams })
+      >(`${this.API_URL}${this.localEndpoint}/delete/documentNumber`, { params: queryParams })
       .pipe(
         map((response: ApiResponse<Customer>) => {
           if (!response.success || !response.data) {
@@ -50,7 +50,7 @@ export class CustomerGatewayImpl
     const endpoint = this.localEndpoint + '/find/all/hits/desc';
     let queryParams = new HttpParams();
     if (isDeleted) queryParams = queryParams.append('isDeleted', isDeleted);
-    return this.httpClient.get<Array<Customer>>(this.apiURL + endpoint, {
+    return this.httpClient.get<Array<Customer>>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -65,7 +65,7 @@ export class CustomerGatewayImpl
       .set('includeDeleted', options?.includeDeleted?.toString() ?? 'false');
 
     const request = this.httpClient
-      .get<ApiResponse<Customer>>(this.apiURL + endpoint, {
+      .get<ApiResponse<Customer>>(this.API_URL + endpoint, {
         params: queryParams,
       })
       .pipe(
@@ -94,7 +94,7 @@ export class CustomerGatewayImpl
       .set('includeDeleted', options?.includeDeleted?.toString() ?? 'false');
 
     const request = this.httpClient
-      .get<ApiResponse<Customer>>(this.apiURL + endpoint, {
+      .get<ApiResponse<Customer>>(this.API_URL + endpoint, {
         params: queryParams,
       })
       .pipe(
@@ -124,7 +124,7 @@ export class CustomerGatewayImpl
     );
 
     const request = this.httpClient
-      .put<ApiResponse<Customer>>(this.apiURL + endpoint, hits, {
+      .put<ApiResponse<Customer>>(this.API_URL + endpoint, hits, {
         params: queryParams,
       })
       .pipe(
@@ -154,7 +154,7 @@ export class CustomerGatewayImpl
     );
 
     const request = this.httpClient
-      .put<ApiResponse<Customer>>(this.apiURL + endpoint, hits, {
+      .put<ApiResponse<Customer>>(this.API_URL + endpoint, hits, {
         params: queryParams,
       })
       .pipe(

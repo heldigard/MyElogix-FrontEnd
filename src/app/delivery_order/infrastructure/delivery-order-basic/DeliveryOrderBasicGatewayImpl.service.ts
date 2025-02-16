@@ -50,7 +50,7 @@ export class DeliveryOrderBasicGatewayImpl
     const request = this.httpClient
       .get<
         ApiResponse<DeliveryOrderBasic>
-      >(`${this.apiURL}${this.localEndpoint}/orders/invoicing-by-date-range`, { params })
+      >(`${this.API_URL}${this.localEndpoint}/orders/invoicing-by-date-range`, { params })
       .pipe(
         map((response: ApiResponse<DeliveryOrderBasic>) => {
           if (!response.success || !response.data) {
@@ -91,7 +91,7 @@ export class DeliveryOrderBasicGatewayImpl
     const request = this.httpClient
       .post<
         PaginationResponse<DeliveryOrderBasic>
-      >(`${this.apiURL}${this.localEndpoint}/filter-by-status`, statusIdList, { params })
+      >(`${this.API_URL}${this.localEndpoint}/filter-by-status`, statusIdList, { params })
       .pipe(
         map((response: PaginationResponse<DeliveryOrderBasic>) => {
           if (!response.success || !response.rows) {
@@ -136,7 +136,7 @@ export class DeliveryOrderBasicGatewayImpl
 
     const request = this.httpClient
       .get<ApiResponse<DeliveryOrderBasic>>(
-        `${this.apiURL}${this.localEndpoint}/filter-by-status-and-date`,
+        `${this.API_URL}${this.localEndpoint}/filter-by-status-and-date`,
         {
           params: {
             ...params,
@@ -189,7 +189,7 @@ export class DeliveryOrderBasicGatewayImpl
     const request = this.httpClient
       .get<
         ApiResponse<CustomerOrdersSummaryDTO>
-      >(`${this.apiURL}${this.localEndpoint}/orders/billed/summary`, { params })
+      >(`${this.API_URL}${this.localEndpoint}/orders/billed/summary`, { params })
       .pipe(
         map((response: ApiResponse<CustomerOrdersSummaryDTO>) => {
           if (!response.success || !response.data) {

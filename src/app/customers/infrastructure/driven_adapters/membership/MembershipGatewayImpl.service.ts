@@ -31,7 +31,7 @@ export class MembershipGatewayImpl
     }
 
     const request = this.httpClient.delete<ApiResponse<Membership>>(
-      `${this.apiURL}${this.localEndpoint}/name/${name}`,
+      `${this.API_URL}${this.localEndpoint}/name/${name}`,
       {
         params: queryParams,
       },
@@ -55,7 +55,7 @@ export class MembershipGatewayImpl
     }
 
     const request = this.httpClient.get<ApiResponse<Membership>>(
-      `${this.apiURL}${this.localEndpoint}/search/name`,
+      `${this.API_URL}${this.localEndpoint}/search/name`,
       {
         params: queryParams,
       },

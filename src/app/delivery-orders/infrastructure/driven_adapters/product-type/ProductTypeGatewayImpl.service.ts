@@ -22,7 +22,7 @@ export class ProductTypeGatewayImpl
     queryParams = queryParams.append('name', name);
     queryParams.append('id', id);
 
-    return this.httpClient.put<number>(this.apiURL + endpoint, {
+    return this.httpClient.put<number>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -30,7 +30,7 @@ export class ProductTypeGatewayImpl
   updateIsMeasurable(measurable: boolean): Observable<number> {
     const endpoint = this.localEndpoint + '/update/isMeasurable';
 
-    return this.httpClient.put<number>(this.apiURL + endpoint, measurable);
+    return this.httpClient.put<number>(this.API_URL + endpoint, measurable);
   }
 
   findByCategory(
@@ -42,7 +42,7 @@ export class ProductTypeGatewayImpl
     queryParams = queryParams.append('name', name);
     if (isDeleted) queryParams = queryParams.append('isDeleted', isDeleted);
 
-    return this.httpClient.get<Array<ProductType>>(this.apiURL + endpoint, {
+    return this.httpClient.get<Array<ProductType>>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }

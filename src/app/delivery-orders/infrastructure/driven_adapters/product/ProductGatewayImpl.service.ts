@@ -36,7 +36,7 @@ export class ProductGatewayImpl
     let queryParams = new HttpParams();
     queryParams = queryParams.append('reference', reference);
 
-    return this.httpClient.delete<boolean>(this.apiURL + endpoint, {
+    return this.httpClient.delete<boolean>(this.API_URL + endpoint, {
       params: queryParams,
     });
   }
@@ -52,7 +52,7 @@ export class ProductGatewayImpl
 
     const request = this.httpClient
       .put<ApiResponse<Product>>(
-        `${this.apiURL}${this.localEndpoint}/reference/${reference}`,
+        `${this.API_URL}${this.localEndpoint}/reference/${reference}`,
         null,
         {
           params: queryParams,
@@ -80,7 +80,7 @@ export class ProductGatewayImpl
   ): Observable<number> | Promise<number> {
     const endpoint = this.localEndpoint + '/hits';
 
-    return this.httpClient.put<number>(this.apiURL + endpoint, hits);
+    return this.httpClient.put<number>(this.API_URL + endpoint, hits);
   }
 
   incrementHits(
@@ -89,7 +89,7 @@ export class ProductGatewayImpl
   ): Observable<number> | Promise<number> {
     const endpoint = this.localEndpoint + '/increment/hits';
 
-    return this.httpClient.put<number>(this.apiURL + endpoint, hits);
+    return this.httpClient.put<number>(this.API_URL + endpoint, hits);
   }
 
   override uploadExcelFile(formData: FormData): Promise<any> {

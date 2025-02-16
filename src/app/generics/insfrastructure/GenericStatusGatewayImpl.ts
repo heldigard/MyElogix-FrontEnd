@@ -23,7 +23,7 @@ export abstract class GenericStatusGatewayImpl<T extends GenericStatus>
 
     const request = this.httpClient
       .put<ApiResponse<T>>(
-        `${this.apiURL}${this.localEndpoint}/${id}/status`,
+        `${this.API_URL}${this.localEndpoint}/${id}/status`,
         null,
         {
           params: queryParams,

@@ -22,7 +22,7 @@ export abstract class GenericNamedBasicGatewayImpl<T extends GenericNamedBasic>
       .set('includeDeleted', options?.includeDeleted ?? false);
 
     const request = this.httpClient
-      .get<ApiResponse<T>>(`${this.apiURL}${this.localEndpoint}/search/name`, {
+      .get<ApiResponse<T>>(`${this.API_URL}${this.localEndpoint}/search/name`, {
         params: queryParams,
       })
       .pipe(
@@ -50,7 +50,7 @@ export abstract class GenericNamedBasicGatewayImpl<T extends GenericNamedBasic>
       .set('includeDeleted', options?.includeDeleted ?? false);
 
     const request = this.httpClient
-      .get<ApiResponse<T>>(`${this.apiURL}${this.localEndpoint}/exists/name`, {
+      .get<ApiResponse<T>>(`${this.API_URL}${this.localEndpoint}/exists/name`, {
         params: queryParams,
       })
       .pipe(

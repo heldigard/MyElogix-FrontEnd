@@ -37,7 +37,7 @@ export class DeliveryOrderGatewayImpl
     const request = this.httpClient
       .get<
         ApiResponse<DeliveryOrder>
-      >(`${this.apiURL}${this.localEndpoint}/nuevo/${customerId}`)
+      >(`${this.API_URL}${this.localEndpoint}/nuevo/${customerId}`)
       .pipe(
         map((response: ApiResponse<DeliveryOrder>) => {
           if (!response.success || !response.data) {
@@ -65,7 +65,7 @@ export class DeliveryOrderGatewayImpl
 
     const request = this.httpClient
       .get<ApiResponse<DeliveryOrder>>(
-        `${this.apiURL}${this.localEndpoint}/billing-status/${id}`,
+        `${this.API_URL}${this.localEndpoint}/billing-status/${id}`,
         {
           params: queryParams,
         },
@@ -100,7 +100,7 @@ export class DeliveryOrderGatewayImpl
     const request = this.httpClient
       .put<
         ApiResponse<DeliveryOrder>
-      >(`${this.apiURL}${this.localEndpoint}/billing-status/batch`, null, { params })
+      >(`${this.API_URL}${this.localEndpoint}/billing-status/batch`, null, { params })
       .pipe(
         map((response: ApiResponse<DeliveryOrder>) => {
           if (!response.success || !response.data) {
@@ -135,7 +135,7 @@ export class DeliveryOrderGatewayImpl
     const request = this.httpClient
       .get<
         ApiResponse<DeliveryOrderResponse>
-      >(`${this.apiURL}${this.localEndpoint}/${id}/response`, { params: queryParams })
+      >(`${this.API_URL}${this.localEndpoint}/${id}/response`, { params: queryParams })
       .pipe(
         catchError((error) => {
           console.error('Error in findByIdResponse:', error);
@@ -180,7 +180,7 @@ export class DeliveryOrderGatewayImpl
     const request = this.httpClient
       .get<
         ApiResponse<DeliveryOrderResponse>
-      >(`${this.apiURL}${this.localEndpoint}/orders/invoicing-by-date-range/${customerId}`, { params })
+      >(`${this.API_URL}${this.localEndpoint}/orders/invoicing-by-date-range/${customerId}`, { params })
       .pipe(
         catchError((error) => {
           console.error('Error fetching delivery orders:', error);
@@ -213,7 +213,7 @@ export class DeliveryOrderGatewayImpl
     const request = this.httpClient
       .get<
         ApiResponse<DeliveryOrderResponse>
-      >(`${this.apiURL}${this.localEndpoint}/orders/invoicing-by-dominant-user`, { params })
+      >(`${this.API_URL}${this.localEndpoint}/orders/invoicing-by-dominant-user`, { params })
       .pipe(
         catchError((error) => {
           console.error('Error fetching delivery orders:', error);
