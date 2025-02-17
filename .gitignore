@@ -69,3 +69,4 @@ Thumbs.db
 .angular
 .codebuddy
 .aider*
+*.ffs_db
