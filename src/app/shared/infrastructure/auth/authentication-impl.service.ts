@@ -93,17 +93,34 @@ export class AuthenticationImplService {
   }
 
   // Modificar logout para usar signals
-  public logout(): void {
+    public logout(): void {
     if (this.isLoggedIn()) {
       this.logout_promise()
-        .then((r) => console.log('logout', r))
+        .then((r) => {
+          console.log('logout', r);
+          this.resetCurrentUser();
+          this.clearCookies();
+          this.isLoggedIn.set(false);
+          this.refreshTokenSignal.set(null);
+          this.navigateToLogin().then(() => {
+            // Refresh the page after navigation is complete
+            window.location.reload();
+          });
+        })
         .catch();
-      this.resetCurrentUser();
-      this.clearCookies();
-      this.isLoggedIn.set(false);
-      this.refreshTokenSignal.set(null);
-      this.navigateToLogin();
     }
+  }
+
+  // Update navigateToLogin to return a Promise
+  public navigateToLogin(): Promise<boolean> {
+    this.clearCookies();
+    this.resetCurrentUser();
+
+    // Avoid circular navigation if already on login
+    if (!this.router.url.includes(URL_AUTH_LOGIN)) {
+      return this.router.navigate([URL_AUTH, URL_AUTH_LOGIN]);
+    }
+    return Promise.resolve(true);
   }
 
   logout_promise(): Promise<boolean> {
@@ -274,18 +291,6 @@ export class AuthenticationImplService {
       this.isLoggedIn.set(false);
     }
     return hasToken;
-  }
-
-  public navigateToLogin() {
-    this.clearCookies();
-    this.resetCurrentUser();
-
-    // Evitar navegación circular si ya estamos en login
-    if (!this.router.url.includes(URL_AUTH_LOGIN)) {
-      this.router.navigate([URL_AUTH, URL_AUTH_LOGIN]).catch((error) => {
-        console.error('Navigation error:', error);
-      });
-    }
   }
 
   public resetCurrentUser() {

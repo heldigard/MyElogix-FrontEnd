@@ -17,6 +17,12 @@ export class CustomerBasicService extends GenericNamedBasicService<
     super(inject(CustomerBasicUseCase));
   }
 
+  public findInListByName(name: string): CustomerBasic | undefined {
+    return this.items().find(
+      (customer: CustomerBasic) => customer.name === name,
+    );
+  }
+
   public createSortOrders(): Sort[] {
     return [
       {

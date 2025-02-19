@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MODULE_COMMERCIAL, SCREEN_TYPE_EDIT } from '@globals';
 import { DeliveryOrderService } from '../../../../../../../delivery_order/infrastructure/delivery-order/delivery-order.service';
-import { CustomerSearchComponent } from '../../../../../../shared/components/customers-search/customer-search.component';
+import { CustomerSearchComponent } from '../../../../../../shared/components/customer-search/customer-search.component';
 import { PestaniaLabelComponent } from '../../../../../../shared/components/pestania-label/pestania-label.component';
 import { DeliveryOrdersSearchComponent } from '../../../../components/delivery-orders-search/delivery-orders-search.component';
 

@@ -235,7 +235,6 @@ export class UserEditComponent implements OnInit {
   }
 
   onCellValueChanged($event: CellValueChangedEvent<any>) {
-    console.log($event.data);
     const userChanged: UserModel = {
       id: $event.data.id,
       username: $event.data.username,

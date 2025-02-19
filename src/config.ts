@@ -47,6 +47,10 @@ import { ProductTypeGateway } from './app/delivery-orders/domain/models/gateways
 import { ProductTypeGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/product-type/ProductTypeGatewayImpl.service';
 import { ProductCategoryGateway } from './app/delivery-orders/domain/models/gateways/ProductCategoryGateway';
 import { ProductCategoryGatewayImpl } from './app/delivery-orders/infrastructure/driven_adapters/product-category/ProductCategoryGatewayImpl.service';
+import { UserModelGateway } from './app/users/domain/models/gateways/UserModelGateway';
+import { UserModelGatewayImpl } from './app/users/infrastructure/driven_adapters/user/UserModelGatewayImpl.service';
+import { RoleModelGateway } from './app/users/domain/models/gateways/RoleModelGateway';
+import { RoleModelGatewayImpl } from './app/users/infrastructure/driven_adapters/role/RoleModelGatewayImpl.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(
@@ -133,6 +137,14 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MeasureDetailGateway,
       useClass: MeasureDetailGatewayImpl,
+    },
+    {
+      provide: UserModelGateway,
+      useClass: UserModelGatewayImpl,
+    },
+    {
+      provide: RoleModelGateway,
+      useClass: RoleModelGatewayImpl,
     },
   ],
 };

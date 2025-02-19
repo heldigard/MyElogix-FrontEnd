@@ -32,6 +32,6 @@ export class CreateProductOrderRendererComponent
   buttonClicked() {
     const productoRef = this.product.reference;
     // Llamar al método addProductByReference del componente padre
-    this.params.context.componentParent.addProductByReference(productoRef);
+    this.params.context.componentParent.addProduct(productoRef);
   }
 }

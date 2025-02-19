@@ -6,7 +6,7 @@ export const environment = {
   get API_URL() {
     // Orden de prioridad: Variable de entorno > window > valor por defecto
     return (
-      process.env['API_URL'] ?? window.API_URL ?? 'https://localhost:8080/api'
+      process.env['API_URL'] ?? window.API_URL ?? 'http://localhost:8080/api'
     );
   },
   get JWT_SECRET() {

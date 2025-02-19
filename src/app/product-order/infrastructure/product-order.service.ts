@@ -322,7 +322,6 @@ export class ProductOrderService extends GenericProductionService<
   public async onProductOrderRemove(
     productOrder: ProductOrder,
   ): Promise<ProductOrder | void> {
-    console.log('onProductOrderRemove', productOrder);
     if (!productOrder || this.isSaving) return;
 
     if (!productOrder.id) {

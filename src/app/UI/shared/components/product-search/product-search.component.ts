@@ -1,13 +1,5 @@
 import { NgIf } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  inject,
-  Input,
-  ViewChild,
-} from '@angular/core';
+import { Component, computed, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,13 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MODULE_COMMERCIAL, MODULE_PRODUCT_ADMIN } from '@globals';
 import { statusFormatter } from '@shared';
 import { AgGridModule } from 'ag-grid-angular';
-import {
-  CellClassParams,
-  ColDef,
-  GridApi,
-  GridReadyEvent,
-  RowModelType,
-} from 'ag-grid-community';
+import { CellClassParams, GridApi } from 'ag-grid-community';
 import { EStatus } from '../../../../delivery-orders/domain/models/EStatus';
 import type { MeasureDetail } from '../../../../delivery-orders/domain/models/MeasureDetail';
 import type { MetricUnit } from '../../../../delivery-orders/domain/models/MetricUnit';
@@ -37,6 +23,8 @@ import { EditProductRendererComponent } from '../../../modules/administration/pa
 import { ClickCreateProductOrderRendererComponent } from '../../../modules/delivery-orders/pages/commercial-delivery-order/components/click-create-product-order-renderer/click-create-product-order-renderer.component';
 import { CreateProductOrderRendererComponent } from '../../../modules/delivery-orders/pages/commercial-delivery-order/components/create-product-order-renderer/create-product-order-renderer.component';
 import { CustomTooltipProductComponent } from '../../../modules/delivery-orders/pages/commercial-delivery-order/components/custom-tooltip-product/custom-tooltip-product.component';
+import { SearchFormComponent } from '../search-form/search-form.component';
+import { GridBaseComponent } from '../gridbase/gridbase.component';
 
 @Component({
   selector: 'app-product-search',
@@ -51,27 +39,15 @@ import { CustomTooltipProductComponent } from '../../../modules/delivery-orders/
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    SearchFormComponent,
     NgIf,
   ],
 })
-export class ProductSearchComponent {
-  private gridApi!: GridApi<Product>;
-  public columnDefs!: ColDef[];
-  public defaultColDef: ColDef;
-
-  public overlayLoadingTemplate: string;
-  public overlayNoRowsTemplate: string;
-  private readonly rowModelType: RowModelType;
-  private readonly ROW_HEIGHT = 50; // altura de cada fila
-  private readonly MAX_ROWS = 10; // máximo número de filas a mostrar
-  private readonly HEADER_HEIGHT = 26; // altura del header
-  public gridHeight = this.HEADER_HEIGHT; // altura inicial
-  public gridOptions: any;
+export class ProductSearchComponent extends GridBaseComponent {
+  protected gridApi!: GridApi<Product>;
   get rowData(): Product[] {
     return this.productService.items();
   }
-  @Input() isLite: boolean = false;
-  @ViewChild('filterTextBox') filterTextBox!: ElementRef<HTMLInputElement>;
   @Input() currentModule!: string;
   private readonly productService: ProductService = inject(ProductService);
   private readonly productOrderService: ProductOrderService =
@@ -113,51 +89,15 @@ export class ProductSearchComponent {
   }
 
   constructor() {
-    // Handle product data updates
-    effect(() => {
-      this.refresh();
-    });
-
-    this.columnDefs = this.getColumnsDefs();
-    this.rowModelType = 'clientSide';
-    this.defaultColDef = {
-      flex: 1,
-      sortable: true,
-      filter: true,
-      floatingFilter: true,
-      editable: false,
-      resizable: true,
-    };
+    super();
 
     this.overlayLoadingTemplate =
       '<span class="ag-overlay-loading-center">Favor espere mientras consulta los productos</span>';
-    this.overlayNoRowsTemplate =
-      '<span style="padding: 10px; border: 2px solid #444; background: lightgoldenrodyellow;">No se encontro ningun producto</span>';
-
-    this.gridOptions = {
-      rowBuffer: 0,
-      maxBlocksInCache: 3,
-      rowModelType: this.rowModelType,
-      paginationAutoPageSize: true,
-      animateRows: true,
-      groupHeaderHeight: 75,
-      floatingFiltersHeight: 26,
-      pivotGroupHeaderHeight: 50,
-      pivotHeaderHeight: 100,
-      overlayLoadingTemplate: this.overlayLoadingTemplate,
-      overlayNoRowsTemplate: this.overlayNoRowsTemplate,
-      rowHeight: this.ROW_HEIGHT,
-      headerHeight: this.HEADER_HEIGHT,
-      domLayout: 'autoHeight',
-      pagination: true,
-      suppressScrollOnNewData: true,
-      context: { componentParent: this },
-    };
   }
 
   refresh(force: boolean = false) {
     if (this.gridApi && !this.gridApi.isDestroyed()) {
-      this.gridApi.setGridOption('loading', true);
+      this.gridApi?.setGridOption('loading', true);
       // Esto disparará el effect cuando se actualice el signal
 
       if (this.rowData.length === 0 || force) {
@@ -166,7 +106,7 @@ export class ProductSearchComponent {
         });
       }
 
-      this.gridApi.setGridOption('loading', false);
+      this.gridApi?.setGridOption('loading', false);
     }
   }
 
@@ -284,51 +224,7 @@ export class ProductSearchComponent {
     }
   }
 
-  onGridReady(params: GridReadyEvent<Product>) {
-    this.gridApi = params.api;
-    this.gridApi.setGridOption('columnDefs', this.getColumnsDefs());
-    this.refresh();
-    this.updateGridHeight();
-  }
-
-  private updateGridHeight() {
-    if (this.gridApi) {
-      // Obtener solo las filas en la página actual
-      const displayedRows = this.gridApi.getDisplayedRowCount();
-      const rowsToShow = Math.min(displayedRows, this.MAX_ROWS);
-      this.gridHeight = this.HEADER_HEIGHT + rowsToShow * this.ROW_HEIGHT;
-
-      // Agregar altura extra para los controles de paginación si hay más filas que el máximo
-      if (this.rowData.length > this.MAX_ROWS) {
-        this.gridHeight += 32; // Altura para los controles de paginación
-      }
-    }
-  }
-  onFilterTextBoxChanged(value: string) {
-    if (this.isLite && value.trim().length > 0) {
-      this.isLite = false;
-      // Initialize grid if not already done
-      if (this.gridApi && !this.gridApi.isDestroyed()) {
-        setTimeout(() => {
-          this.gridApi.setGridOption('columnDefs', this.getColumnsDefs());
-          this.updateGridHeight();
-        });
-      }
-    }
-
-    // Existing quick filter logic
-    if (this.gridApi && !this.gridApi.isDestroyed()) {
-      this.gridApi.setGridOption('quickFilterText', value);
-    }
-  }
-
-  private resetFilters() {
-    this.gridApi?.setFilterModel(null);
-    this.filterTextBox.nativeElement.value = '';
-    this.gridApi?.setGridOption('quickFilterText', '');
-  }
-
-  public addProductByReference(reference: string) {
+  public addProduct(reference: string) {
     if (!reference.trim()) {
       return;
     }
@@ -363,7 +259,7 @@ export class ProductSearchComponent {
 
   focusSearchInput() {
     setTimeout(() => {
-      this.filterTextBox.nativeElement.focus();
+      this.searchForm.focusSearchInput();
     });
   }
 }

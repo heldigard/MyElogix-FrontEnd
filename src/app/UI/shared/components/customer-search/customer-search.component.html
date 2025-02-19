@@ -1,26 +1,24 @@
 <div class="container-fluid">
   <div class="row">
-    <div *ngIf="!isLite">
-      <button matTooltip="Refrescar" mat-icon-button (click)="refresh(true)">
-        <mat-icon>refresh</mat-icon>
-      </button>
-    </div>
+    <button matTooltip="Refrescar" mat-icon-button (click)="refresh(true)">
+      <mat-icon>refresh</mat-icon>
+    </button>
     <button type="button" class="button-add">
       <mat-icon class="text-icon">add</mat-icon>
     </button>
     <div class="col p-0 m-0">
       <app-search-form
         #searchForm
-        label="Agregar Producto"
-        placeholder="Buscar producto..."
+        label="Buscar Cliente Nueva Order"
+        placeholder="Buscar Cliente Nueva Order..."
         (filterTextChanged)="onFilterTextBoxChanged($event)"
-        (itemSelected)="addProduct($event)"
+        (itemSelected)="addCustomer($event)"
       ></app-search-form>
     </div>
   </div>
 </div>
-
 <div [class.hidden]="isLite">
+  {{ title }}
   <ag-grid-angular
     class="ag-theme-alpine custom-grid"
     [columnDefs]="columnDefs"
