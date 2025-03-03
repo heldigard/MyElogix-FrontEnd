@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'src/app/styles/variables' as *;
 
 .container-fluid {
   display: flex;

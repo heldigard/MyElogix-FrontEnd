@@ -50,7 +50,7 @@
           <app-product-order-actions
             [productOrder]="enriched.order"
             [screenType]="screenType"
-            [orderStatus]="enriched.orderStatus"
+            [orderStatus]="order()?.status?.name"
             (advanceStatus)="onAdvanceStatus($event)"
           >
           </app-product-order-actions>

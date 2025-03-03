@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,6 +34,7 @@ import {
   ],
   templateUrl: './product-order-header.component.html',
   styleUrls: ['./product-order-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductOrderHeaderComponent {
   @Input() productOrder!: ProductOrder;

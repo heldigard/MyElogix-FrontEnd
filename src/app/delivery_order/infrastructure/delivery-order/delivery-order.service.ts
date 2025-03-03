@@ -37,6 +37,10 @@ import {
   URL_PRODUCTION,
   URL_PRODUCTION_VIEW,
 } from '../../../globals';
+import { BackendWebSocketService } from '../../../shared/infrastructure/websocket/backend-websocket.service';
+import { Subscription } from 'rxjs';
+import type { GenericProductionWebSocketMessage } from '../../../generics/insfrastructure/websocket/GenericProductionWebSocketMessage';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -85,11 +89,25 @@ export class DeliveryOrderService extends GenericProductionService<
   private readonly productService: ProductService = inject(ProductService);
   private readonly router: Router = inject(Router);
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly toastrService: ToastrService = inject(ToastrService);
+
+  // WebSocket related fields
+  private readonly webSocketService = inject(BackendWebSocketService);
+  private orderWebSocketSubscription: Subscription | null = null;
+  private currentWebSocketTopic: string | null = null;
+  private webSocketConnectionStatus = signal<
+    'connected' | 'disconnected' | 'error'
+  >('disconnected');
+
   constructor() {
     super(inject(DeliveryOrderUseCase));
   }
   public getState(): Signal<DeliveryOrderResponseState> {
     return this.stateResponse.asReadonly();
+  }
+
+  public getCurrentOrder(): DeliveryOrder | undefined {
+    return this.getState()().order;
   }
 
   override setState(partialState: Partial<DeliveryOrderResponseState>): void {
@@ -181,6 +199,7 @@ export class DeliveryOrderService extends GenericProductionService<
   public updateOrderState(
     orderResponse: DeliveryOrderResponse | DeliveryOrder,
   ) {
+    console.log('Updating order state:', orderResponse);
     if ('order' in orderResponse) {
       // Handle DeliveryOrderResponse case
       this.setState({
@@ -476,5 +495,123 @@ export class DeliveryOrderService extends GenericProductionService<
       console.error('Error in getOrdersForDateRangeInvoicing:', error);
       return [];
     }
+  }
+
+  /**
+   * Subscribe to real-time updates for a specific delivery order
+   * @param orderId The ID of the delivery order to subscribe to
+   */
+  public subscribeToOrderUpdates(orderId: number): void {
+    const topic = `/topic/delivery-orders/${orderId}`;
+
+    if (this.isAlreadySubscribed(topic)) {
+      return;
+    }
+
+    this.unsubscribeFromOrderUpdates();
+    this.setupNewSubscription(topic);
+  }
+
+  private isAlreadySubscribed(topic: string): boolean {
+    return (
+      this.currentWebSocketTopic === topic && !!this.orderWebSocketSubscription
+    );
+  }
+
+  private setupNewSubscription(topic: string): void {
+    this.currentWebSocketTopic = topic;
+    this.webSocketConnectionStatus.set('disconnected');
+
+    this.orderWebSocketSubscription = this.webSocketService
+      .subscribeWithType<
+        GenericProductionWebSocketMessage<DeliveryOrder | DeliveryOrderResponse>
+      >(topic)
+      .subscribe({
+        next: (message) => this.handleWebSocketMessage(message),
+        error: (error) => this.handleWebSocketError(error),
+        complete: () => this.handleWebSocketComplete(),
+      });
+  }
+
+  private handleWebSocketMessage(
+    messageWrapper: GenericProductionWebSocketMessage<
+      DeliveryOrder | DeliveryOrderResponse
+    >,
+  ): void {
+    this.webSocketConnectionStatus.set('connected');
+    const id = this.stateResponse().order.id;
+    const orderResponse: DeliveryOrderResponse | DeliveryOrder =
+      messageWrapper.data;
+
+    if (messageWrapper.id == id && orderResponse) {
+      this.updateOrderState(orderResponse);
+      this.showUpdateNotification(orderResponse);
+
+      if (messageWrapper.message) {
+        console.log(
+          `WebSocket message: ${messageWrapper.status} - ${messageWrapper.message}`,
+        );
+      }
+    }
+  }
+
+  private showUpdateNotification(
+    orderResponse: DeliveryOrderResponse | DeliveryOrder,
+  ): void {
+    let messageToastr = '';
+
+    // Check if it's a DeliveryOrderResponse or a DeliveryOrder
+    if ('order' in orderResponse) {
+      // Handle DeliveryOrderResponse case
+      messageToastr = `La Orden ${orderResponse.order.id} ha sido actualizada`;
+    } else {
+      // Handle DeliveryOrder case
+      messageToastr = `La Orden ${orderResponse.id} ha sido actualizada`;
+    }
+
+    this.toastrService.info(messageToastr, 'Actualización', {
+      timeOut: 5000,
+    });
+  }
+
+  private handleWebSocketError(error: any): void {
+    this.webSocketConnectionStatus.set('error');
+    console.error('WebSocket order subscription error:', error);
+  }
+
+  private handleWebSocketComplete(): void {
+    this.webSocketConnectionStatus.set('disconnected');
+  }
+
+  /**
+   * Unsubscribe from current order updates
+   */
+  public unsubscribeFromOrderUpdates(): void {
+    if (this.orderWebSocketSubscription) {
+      this.orderWebSocketSubscription.unsubscribe();
+      this.orderWebSocketSubscription = null;
+    }
+
+    // Also remove from server-side subscription if topic exists
+    if (this.currentWebSocketTopic) {
+      this.webSocketService.unsubscribe(this.currentWebSocketTopic);
+      this.currentWebSocketTopic = null;
+    }
+
+    this.webSocketConnectionStatus.set('disconnected');
+  }
+
+  /**
+   * Returns the current WebSocket connection status for UI feedback
+   */
+  public getWebSocketStatus(): Signal<'connected' | 'disconnected' | 'error'> {
+    return this.webSocketConnectionStatus.asReadonly();
+  }
+
+  /**
+   * Clean up resources when service is destroyed
+   */
+  public cleanup(): void {
+    this.unsubscribeFromOrderUpdates();
   }
 }

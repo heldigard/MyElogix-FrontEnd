@@ -6,8 +6,8 @@
 </ng-container>
 <app-order-header
   [screenType]="SCREEN_TYPE_VIEW_DISPATCH"
-  [orderId]="order().id!"
-  [orderStatus]="order().status!"
+  [orderId]="order()?.id!"
+  [orderStatus]="order()?.status!"
 >
 </app-order-header>
 <app-view-order

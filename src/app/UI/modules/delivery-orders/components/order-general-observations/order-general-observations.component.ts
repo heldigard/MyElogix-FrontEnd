@@ -53,8 +53,7 @@ import { type DeliveryOrder } from '../../../../../delivery_order/domain/model/D
   ],
 })
 export class OrderGeneralObservationsComponent implements OnInit, OnDestroy {
-  private readonly state = computed(() => this.orderService.getState()());
-  private readonly order = computed(() => this.state().order);
+  private readonly order = computed(() => this.orderService.getCurrentOrder());
   public form!: FormGroup;
   public formValid = signal(true);
   private previousOrderId: number | undefined = undefined;
@@ -201,9 +200,8 @@ export class OrderGeneralObservationsComponent implements OnInit, OnDestroy {
 
   updateObservationsDeliveryOrder(text: string): void {
     try {
-      const order = this.order();
       const currentObservations = (
-        order.generalObservations ?? ''
+        this.order()?.generalObservations ?? ''
       ).toUpperCase();
       const newObservations = text.toUpperCase();
 

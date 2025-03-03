@@ -31,6 +31,7 @@ import { AuthenticationResponse } from '../../domain/models/auth/AuthenticationR
 import { LogoutRequest } from '../../domain/models/auth/LogoutRequest';
 import { RefreshRequest } from '../../domain/models/auth/RefreshRequest';
 import { UserDTO } from '../../domain/models/auth/UserDTO';
+import { BackendWebSocketService } from '../websocket/backend-websocket.service';
 import type { DecodedToken } from '../../domain/models/auth/DecodedToken';
 
 @Injectable({
@@ -39,7 +40,9 @@ import type { DecodedToken } from '../../domain/models/auth/DecodedToken';
 export class AuthenticationImplService {
   private readonly API_URL = environment.API_URL + environment.apiVersion;
   private readonly localEndpoint = '/auth';
-
+  private readonly webSocketService: BackendWebSocketService = inject(
+    BackendWebSocketService,
+  );
   private readonly httpClient: HttpClient = inject(HttpClient);
   private readonly router: Router = inject(Router);
   private readonly cookieService: CookieService = inject(CookieService);
@@ -93,7 +96,7 @@ export class AuthenticationImplService {
   }
 
   // Modificar logout para usar signals
-    public logout(): void {
+  public logout(): void {
     if (this.isLoggedIn()) {
       this.logout_promise()
         .then((r) => {
@@ -250,7 +253,7 @@ export class AuthenticationImplService {
     const expirationTime = Number(
       name === 'refreshToken'
         ? environment.JWT_REFRESH_EXPIRATION
-        : environment.JWT_EXPIRATION
+        : environment.JWT_EXPIRATION,
     );
 
     const options: CookieOptions = {

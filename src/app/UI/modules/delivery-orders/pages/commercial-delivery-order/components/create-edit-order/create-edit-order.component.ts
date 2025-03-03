@@ -39,9 +39,10 @@ import { OrderStatsComponent } from '../../../../components/order-stats/order-st
 export class CreateEditOrderComponent {
   @Input() screenType!: string;
   @Input() title!: string;
-
   protected readonly state = computed(() => this.orderService.getState()());
-  protected readonly order = computed(() => this.state().order);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
   protected readonly isOrderFinished = computed(() => {
     const order = this.order();
     if (!order) return false;

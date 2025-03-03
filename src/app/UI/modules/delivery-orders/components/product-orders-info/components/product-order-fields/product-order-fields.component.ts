@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
-  EventEmitter,
+  effect,
   inject,
   Input,
   Output,
-  type OnInit,
+  EventEmitter,
+  OnInit,
 } from '@angular/core';
 import { ReactiveFormsModule, type FormGroup } from '@angular/forms';
 import {
@@ -31,6 +32,7 @@ import { TagDirective } from '../../../../pages/commercial-delivery-order/compon
 import { type MeasureDetail } from '../../../../../../../delivery-orders/domain/models/MeasureDetail';
 import { type MetricUnit } from '../../../../../../../delivery-orders/domain/models/MetricUnit';
 import { type ProductOrder } from '../../../../../../../product-order/domain/model/ProductOrder';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-product-order-fields',
@@ -46,11 +48,36 @@ import { type ProductOrder } from '../../../../../../../product-order/domain/mod
   ],
   templateUrl: './product-order-fields.component.html',
   styleUrls: ['./product-order-fields.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductOrderFieldsComponent implements OnInit {
   @Input() productOrder!: ProductOrder;
   @Input() screenType!: string;
   @Output() lastFieldEntered = new EventEmitter<void>();
+
+  // Propiedad para guardar el índice inicial del producto
+  private initialIndex: number = -1;
+
+  // Signal computado que apunta al productOrder actual dentro del estado global
+  protected readonly currentProductOrder = computed(() => {
+    const orders = this.productOrderService.getProductOrders()();
+
+    // Si tenemos un índice inicial válido, intentamos usar ese primero
+    if (this.initialIndex >= 0 && this.initialIndex < orders.length) {
+      const orderAtIndex = orders[this.initialIndex];
+      // Verificamos que sea el mismo producto comparando propiedades únicas
+      if (orderAtIndex?.product?.id === this.productOrder?.product?.id) {
+        return orderAtIndex;
+      }
+    }
+
+    // Si el índice no es válido o el producto cambió, buscamos por ID
+    const productId = this.productOrder?.product?.id;
+    return (
+      orders.find((order) => order.product?.id === productId) ||
+      this.productOrder
+    );
+  });
   protected form!: FormGroup;
   private formSubscription?: Subscription;
 
@@ -91,12 +118,11 @@ export class ProductOrderFieldsComponent implements OnInit {
 
   private readonly orderService: DeliveryOrderService =
     inject(DeliveryOrderService);
-  private readonly state = computed(() => this.orderService.getState()());
-  protected readonly order = computed(() => this.state().order);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
   private readonly productOrderService: ProductOrderService =
     inject(ProductOrderService);
-  constructor(private readonly toastrService: ToastrService) {}
-
   get isFieldReadOnly(): boolean {
     return isScreenView(this.screenType);
   }
@@ -105,39 +131,68 @@ export class ProductOrderFieldsComponent implements OnInit {
     return isEditObservation(this.order(), this.screenType) ?? false;
   }
 
-  get strikethrough(): string {
-    return this.productOrderService.getStrikethrough(this.productOrder);
-  }
-
-  get index(): number {
-    return this.productOrderService.getIndex(this.productOrder);
-  }
-
-  get measurable(): boolean {
-    return this.productOrder.product.type?.isMeasurable || false;
-  }
-
   get isLastProductOrder(): boolean {
     const size = this.productOrderService.getProductOrdersLength();
     return this.index === size - 1;
   }
 
+  // Actualizar getters para usar el signal computado
+  get measurable(): boolean {
+    return this.currentProductOrder().product.type?.isMeasurable || false;
+  }
+
+  get strikethrough(): string {
+    return this.productOrderService.getStrikethrough(
+      this.currentProductOrder(),
+    );
+  }
+
+  get index(): number {
+    return this.productOrderService.getIndex(this.currentProductOrder());
+  }
+
+  constructor(private readonly toastrService: ToastrService) {
+    // Effect to keep form in sync with product changes
+    effect(() => {
+      const updatedProduct = this.currentProductOrder();
+      // Only apply if form exists and isn't being edited
+      if (updatedProduct && this.form && !this.form.dirty) {
+        this.form.patchValue(
+          {
+            amount: updatedProduct.amount,
+            observation: updatedProduct.observation ?? '',
+            // Add measurable fields if applicable
+            ...(this.measurable
+              ? {
+                  measure1: updatedProduct.measure1,
+                  measure2: updatedProduct.measure2,
+                  metricUnit: updatedProduct.metricUnit,
+                  measureDetail: updatedProduct.measureDetail,
+                }
+              : {}),
+          },
+          { emitEvent: false },
+        );
+      }
+    });
+  }
+
   ngOnInit(): void {
+    // Guardar el índice inicial para optimizar búsquedas futuras
+    this.initialIndex = this.productOrderService.getIndex(this.productOrder);
+
+    // Usar el productOrder del signal computado en lugar del input directo
     this.form = this.productOrderService.getFormFromProductOrder(
-      this.productOrder,
+      this.currentProductOrder(),
     );
 
-    // Subscribe to form value changes
+    // Resto del código existente para la suscripción al formulario
     this.formSubscription = this.form.valueChanges
-      .pipe(
-        debounceTime(300), // Wait for user to stop typing
-        distinctUntilChanged(), // Only emit when value actually changes
-      )
+      .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((formValue) => {
         this.onFormValueChange(formValue);
       });
   }
-
   ngOnDestroy(): void {
     // Clean up subscription
     this.formSubscription?.unsubscribe();
@@ -373,6 +428,8 @@ export class ProductOrderFieldsComponent implements OnInit {
   }
 
   protected getBackgroundClass(order: ProductOrder): string {
-    return this.productOrderService.getBackgroundClass(order);
+    return this.productOrderService.getBackgroundClass(
+      this.currentProductOrder(),
+    );
   }
 }

@@ -37,7 +37,6 @@ export class ProductionDeliveryOrderComponent {
   public deliveryOrdersIcon: string;
   public viewOrderTitle: string;
   public viewOrderIcon: string;
-
   public animationState: number;
 
   @ViewChild(MatTabNav, { static: true }) navigation!: MatTabNav;

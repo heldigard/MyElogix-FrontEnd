@@ -1,6 +1,8 @@
+@use "src/app/styles/variables" as *;
+
 .background {
   height: 900px;
-  background-image: url('/assets/images/login_background.jpg');
+  background-image: url("/assets/images/login_background.jpg");
   background-size: cover;
 }
 
@@ -11,8 +13,6 @@ hr.rounded {
 }
 
 ///////////////////////////////////////////////
-
-@import 'variables';
 
 .card {
   box-shadow: -6px 10px 21px 2px rgba(255, 255, 255, 0.75);

@@ -23,8 +23,9 @@ export class OrderHeaderComponent implements OnInit {
   @Input() public orderStatus: Status = { id: -1 };
 
   public headerClass = 'container-fluid';
-  private readonly state = computed(() => this.orderService.getState()());
-  protected readonly order = computed(() => this.state().order);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
 
   private readonly orderService: DeliveryOrderService =
     inject(DeliveryOrderService);

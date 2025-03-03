@@ -31,9 +31,10 @@ import { ActivatedRoute } from '@angular/router';
 export class ViewOrderComponent {
   @Input() screenType: string = '';
   @Input() title: string = '';
-
   protected readonly state = computed(() => this.orderService.getState()());
-  protected readonly order = computed(() => this.state().order);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
   private readonly orderService: DeliveryOrderService =
     inject(DeliveryOrderService);
 
@@ -42,7 +43,7 @@ export class ViewOrderComponent {
   constructor() {
     effect(() => {
       const order = this.order();
-      if (order.id) {
+      if (order?.id) {
         return;
       }
     });

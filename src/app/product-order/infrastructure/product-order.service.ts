@@ -137,8 +137,8 @@ export class ProductOrderService extends GenericProductionService<
     };
   }
 
-  public getProductOrders(): ProductOrder[] {
-    return this.productOrders();
+  public getProductOrders() {
+    return this.productOrders;
   }
 
   public getProductOrdersLength(): number {
@@ -224,7 +224,7 @@ export class ProductOrderService extends GenericProductionService<
   }
 
   // Method to update state when product orders change
-  private updateProductOrders(updatedOrders: ProductOrder[]) {
+  public updateProductOrders(updatedOrders: ProductOrder[]) {
     const order = this.order();
     if (!order) return;
 

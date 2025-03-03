@@ -1,5 +1,5 @@
-<ng-container *ngIf="productOrder">
-  <div class="container-fluid {{ getBackgroundClass(productOrder) }}">
+<ng-container *ngIf="this.currentProductOrder()">
+  <div class="container-fluid {{ getBackgroundClass(this.currentProductOrder()) }}">
     <div class="row justify-content-center" [formGroup]="form">
       <!-- Amount Field -->
       <div class="col-2 ps-1 pe-1">

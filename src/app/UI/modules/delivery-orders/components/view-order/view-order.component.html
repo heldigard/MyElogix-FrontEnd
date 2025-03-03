@@ -1,4 +1,4 @@
-<ng-container *ngIf="!state().isLoading && order().id">
+<ng-container *ngIf="!state().isLoading && order()?.id">
   <app-order-customer-info [screenType]="screenType"></app-order-customer-info>
 
   <app-order-general-observations
@@ -8,7 +8,7 @@
   <app-audit-info
     [data]="order()"
     [showUpdatedInfo]="true"
-    [index]="order().id"
+    [index]="order()?.id"
   >
   </app-audit-info>
 

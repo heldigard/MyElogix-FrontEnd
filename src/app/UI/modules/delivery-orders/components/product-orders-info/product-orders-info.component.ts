@@ -8,6 +8,7 @@ import {
   Input,
   Output,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -37,6 +38,7 @@ import { ProductOrderHeaderComponent } from './components/product-order-header/p
   ],
   templateUrl: './product-orders-info.component.html',
   styleUrls: ['./product-orders-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductOrdersInfoComponent {
   @Input() screenType!: string;
@@ -46,21 +48,35 @@ export class ProductOrdersInfoComponent {
     inject(DeliveryOrderService);
   private readonly productOrderService: ProductOrderService =
     inject(ProductOrderService);
-
-  private readonly state = computed(() => this.orderService.getState()());
-  private readonly order = computed(() => this.state().order);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
+  private previousOrders: ProductOrder[] = [];
+  private memoizedEnrichedOrders: {
+    order: ProductOrder;
+    backgroundClass: string;
+    shouldExpand: boolean;
+  }[] = [];
 
   protected readonly enrichedOrders = computed(() => {
-    // Obtener los orders directamente del servicio
-    const orders = this.productOrderService.getProductOrders();
-    return orders.map((order) => ({
-      order,
-      backgroundClass: this.productOrderService.getBackgroundClass(order),
-      orderStatus:
-        this.order()?.status?.name ??
-        EStatus.PENDING,
-      shouldExpand: !isFinishedProductOrder(order),
-    }));
+    const orders = this.productOrderService.getProductOrders()();
+
+    // Check if orders array reference or content has changed
+    const ordersChanged =
+      this.previousOrders !== orders ||
+      this.previousOrders.some((prev, i) => prev !== orders[i]);
+
+    if (ordersChanged) {
+      // Only rebuild the array if something changed
+      this.memoizedEnrichedOrders = orders.map((order) => ({
+        order,
+        backgroundClass: this.productOrderService.getBackgroundClass(order),
+        shouldExpand: !isFinishedProductOrder(order),
+      }));
+      this.previousOrders = [...orders];
+    }
+
+    return this.memoizedEnrichedOrders;
   });
 
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
@@ -68,7 +84,7 @@ export class ProductOrdersInfoComponent {
   protected readonly SCREEN_TYPE_VIEW_PRODUCTION = SCREEN_TYPE_VIEW_PRODUCTION;
 
   trackByOrder(index: number, enriched: { order: ProductOrder }): number {
-    return enriched.order.id ?? 0;
+    return enriched.order.id ?? index; // Fallback to index if no ID
   }
 
   getProductOrderAtIndex(index: number) {
@@ -76,20 +92,15 @@ export class ProductOrdersInfoComponent {
   }
 
   onLastFieldEntered() {
-    console.log('onLastFieldEntered');
     this.lastFieldEnter.emit();
   }
 
   protected getBackgroundClass(order: ProductOrder): string {
-    console.log('getBackgroundClass');
     return this.productOrderService.getBackgroundClass(order);
   }
 
   protected getOrderStatus(): EStatus {
-    return (
-      this.order()?.status?.name ??
-      EStatus.PENDING
-    );
+    return this.order()?.status?.name ?? EStatus.PENDING;
   }
 
   protected onAdvanceStatus(event: any) {

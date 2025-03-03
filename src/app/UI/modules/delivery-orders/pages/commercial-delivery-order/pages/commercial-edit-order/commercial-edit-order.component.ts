@@ -1,5 +1,12 @@
 import { NgIf } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ActivatedRoute } from '@angular/router';
 import { EDIT_ORDER_TITLE, SCREEN_TYPE_EDIT } from '@globals';
@@ -21,21 +28,27 @@ import { CreateEditOrderComponent } from '../../components/create-edit-order/cre
     MatProgressSpinner,
   ],
 })
-export class CommercialEditOrderComponent {
+export class CommercialEditOrderComponent implements OnInit, OnDestroy {
   public editOrderTitle: string;
   protected readonly state = computed(() => this.orderService.getState()());
-  protected readonly order = computed(() => this.state().order);
-  private readonly route = inject(ActivatedRoute);
-  private readonly orderService = inject(DeliveryOrderService);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly orderService: DeliveryOrderService =
+    inject(DeliveryOrderService);
   protected readonly SCREEN_TYPE_EDIT = SCREEN_TYPE_EDIT;
+  private currentOrderId: number | null = null;
 
   constructor() {
     this.editOrderTitle = EDIT_ORDER_TITLE;
-    // console.log('CommercialEditOrderComponent constructor');
+
     effect(() => {
       const order = this.order();
-      // Skip if we already have order data
+      // If we have order data
       if (order?.id) {
+        this.currentOrderId = order.id;
+        this.subscribeToOrderUpdates();
         return;
       }
 
@@ -43,13 +56,36 @@ export class CommercialEditOrderComponent {
       this.route.queryParams.pipe(first()).subscribe((params) => {
         const id = params['deliveryOrderId'];
         if (id) {
-          // console.log('Loading delivery order from URL:', id);
+          this.currentOrderId = parseInt(id);
           this.orderService.setActiveDeliveryOrderView(
-            parseInt(id),
+            this.currentOrderId,
             SCREEN_TYPE_EDIT,
           );
+          this.subscribeToOrderUpdates();
         }
       });
     });
+  }
+
+  ngOnInit(): void {
+    // Subscribe to WebSocket updates when component initializes
+    // and we have a valid order ID
+    if (this.currentOrderId) {
+      this.subscribeToOrderUpdates();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe from WebSocket when component is destroyed
+    this.orderService.unsubscribeFromOrderUpdates();
+  }
+
+  private subscribeToOrderUpdates(): void {
+    if (this.currentOrderId) {
+      console.log(
+        `Subscribing to WebSocket updates for order ${this.currentOrderId}`,
+      );
+      this.orderService.subscribeToOrderUpdates(this.currentOrderId);
+    }
   }
 }

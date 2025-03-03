@@ -27,8 +27,9 @@ import { ViewOrderComponent } from '../../../../components/view-order/view-order
 })
 export class DispatchViewOrderComponent {
   public editOrderTitle: string;
-  private readonly state = computed(() => this.orderService.getState()());
-  protected readonly order = computed(() => this.state().order);
+  protected readonly order = computed(() =>
+    this.orderService.getCurrentOrder(),
+  );
   private readonly route = inject(ActivatedRoute);
 
   private readonly orderService: DeliveryOrderService =

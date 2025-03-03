@@ -37,7 +37,7 @@ import { ProductOrderService } from '../../../../../../../product-order/infrastr
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductOrderActionsComponent {
-  @Input() orderStatus: EStatus = EStatus.PENDING;
+  @Input() orderStatus: EStatus | undefined = EStatus.PENDING;
   @Input() screenType: string = '';
   @Input() productOrder!: ProductOrder;
   @Output() advanceStatus = new EventEmitter<ProductOrder>();
